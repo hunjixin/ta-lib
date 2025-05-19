@@ -6,12 +6,13 @@ pub fn build(b: *std.Build) !void {
     const cwd = std.fs.cwd();
     var allocator = std.heap.page_allocator;
 
-    const lib = b.addStaticLibrary(.{
-        .name = "ta_lib",
+    const rootModule = b.createModule(.{
         .root_source_file = b.path("src/lib.zig"),
         .target = target,
         .optimize = optimize,
+        .error_tracing = true,
     });
+    const lib = b.addStaticLibrary(.{ .name = "ta_lib", .root_module = rootModule });
 
     b.installArtifact(lib);
 
@@ -30,13 +31,8 @@ pub fn build(b: *std.Build) !void {
         const path_buf = try std.fs.path.join(allocator, &[_][]const u8{ "src", entry.name });
         defer allocator.free(path_buf);
 
-        const test_compiled = b.addTest(.{
-            .root_source_file = b.path(path_buf),
-            .target = target,
-            .optimize = optimize,
-        });
+        const test_compiled = b.addTest(.{ .name = entry.name, .root_module = rootModule });
 
-        test_compiled.linkLibrary(lib);
         const test_run = b.addRunArtifact(test_compiled);
         run_tests.dependOn(&test_run.step);
     }

@@ -1,6 +1,6 @@
 const std = @import("std");
 
-const MyError = error{
+pub const MyError = error{
     ColumnNotFound,
     RowIndexOutOfBounds,
     RowColumnMismatch,
@@ -28,11 +28,11 @@ pub fn Column(comptime T: type) type {
             try self.data.append(value);
         }
 
-        pub fn get(self: *Self, index: usize) T {
+        pub fn get(self: *const Self, index: usize) T {
             return self.data.items[index];
         }
 
-        pub fn len(self: *Self) usize {
+        pub fn len(self: *const Self) usize {
             return self.data.items.len;
         }
 
@@ -69,6 +69,15 @@ pub fn DataFrame(comptime T: type) type {
             try self.columns.append(col);
         }
 
+        pub fn addColumnWithData(self: *Self, name: []const u8, values: []const T) !void {
+            var col = try Column(T).init(self.allocator, name);
+            for (values) |v| {
+                try col.push(v);
+            }
+
+            try self.columns.append(col);
+        }
+
         pub fn addRow(self: *Self, values: []const T) !void {
             if (values.len != self.columns.items.len)
                 return error.RowColumnMismatch;
@@ -96,14 +105,14 @@ pub fn DataFrame(comptime T: type) type {
             }
         }
 
-        fn findColumnByName(self: *Self, name: []const u8) !usize {
+        fn findColumnByName(self: *const Self, name: []const u8) !usize {
             for (0..self.columns.items.len) |i| {
                 if (std.mem.eql(u8, self.columns.items[i].name, name)) return i;
             }
             return MyError.ColumnNotFound;
         }
 
-        pub fn getValue(self: *Self, colName: []const u8, rowIndex: usize) !T {
+        pub fn getValue(self: *const Self, colName: []const u8, rowIndex: usize) !T {
             const idx = try self.findColumnByName(colName);
 
             if (rowIndex >= self.columns.items[idx].len())
@@ -112,12 +121,12 @@ pub fn DataFrame(comptime T: type) type {
             return self.columns.items[idx].get(rowIndex);
         }
 
-        pub fn getColumnData(self: *Self, colName: []const u8) ![]const T {
+        pub fn getColumnData(self: *const Self, colName: []const u8) ![]const T {
             const idx = try self.findColumnByName(colName);
             return self.columns.items[idx].data.items[0..self.columns.items[idx].len()];
         }
 
-        pub fn getRow(self: *Self, rowIndex: usize, allocator: std.mem.Allocator) ![]T {
+        pub fn getRow(self: *const Self, rowIndex: usize, allocator: std.mem.Allocator) ![]T {
             const colCount = self.columns.items.len;
             if (colCount == 0) return MyError.RowColumnMismatch;
 
