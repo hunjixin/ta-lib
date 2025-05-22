@@ -4,6 +4,7 @@ pub const MyError = error{
     ColumnNotFound,
     RowIndexOutOfBounds,
     RowColumnMismatch,
+    TooFewDataPoints,
 };
 
 pub fn Column(comptime T: type) type {
@@ -20,7 +21,7 @@ pub fn Column(comptime T: type) type {
             };
         }
 
-        pub fn deinit(self: *Self) void {
+        pub fn deinit(self: *const Self) void {
             self.data.deinit();
         }
 
@@ -36,9 +37,8 @@ pub fn Column(comptime T: type) type {
             return self.data.items.len;
         }
 
-        pub fn printValue(self: *Self, index: usize) void {
-            const val = self.get(index);
-            std.debug.print("{}", .{val});
+        pub fn asSlice(self: *const Self) []const T {
+            return self.data.items[0..self.data.items.len];
         }
     };
 }
@@ -84,24 +84,6 @@ pub fn DataFrame(comptime T: type) type {
 
             for (0..self.columns.items.len) |i| {
                 try self.columns.items[i].push(values[i]);
-            }
-        }
-
-        pub fn print(self: *Self) void {
-            inline for (self.columns.items) |col| {
-                std.debug.print("{s}\t", .{col.name});
-            }
-            std.debug.print("\n", .{});
-
-            if (self.columns.items.len == 0) return;
-
-            const rowCount = self.columns.items[0].len();
-            for (0..rowCount) |i| {
-                inline for (self.columns.items) |col| {
-                    col.printValue(i);
-                    std.debug.print("\t", .{});
-                }
-                std.debug.print("\n", .{});
             }
         }
 
