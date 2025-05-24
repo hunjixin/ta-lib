@@ -94,13 +94,20 @@ pub fn DataFrame(comptime T: type) type {
             return MyError.ColumnNotFound;
         }
 
-        pub fn getValue(self: *const Self, colName: []const u8, rowIndex: usize) !T {
+        pub fn getValue(self: *const Self, colName: []const u8, rowIndex: usize) T {
             const idx = try self.findColumnByName(colName);
 
             if (rowIndex >= self.columns.items[idx].len())
                 return MyError.RowIndexOutOfBounds;
 
             return self.columns.items[idx].get(rowIndex);
+        }
+
+        pub fn row_count(self: *const Self) usize {
+            if (self.columns.items.len == 0) {
+                return 0;
+            }
+            return self.columns.items[0].len();
         }
 
         pub fn getColumnData(self: *const Self, colName: []const u8) ![]const T {

@@ -2,8 +2,11 @@ const std = @import("std");
 const Column = @import("./lib.zig").Column;
 const DataFrame = @import("./lib.zig").DataFrame;
 const MyError = @import("./lib.zig").MyError;
-
-pub fn AD(df: *DataFrame(f64), allocator: std.mem.Allocator) !Column(f64) {
+// The AD function calculates the Accumulation/Distribution Line (ADL) for a given DataFrame.
+// Formula: ADL = SUM(((2 * Close - High - Low) / (High - Low)) * Volume)
+// This is a cumulative indicator that uses the relationship between the stock's price and volume
+// to determine the flow of money into or out of a stock over time.
+pub fn AD(df: *DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
     //const len = try df.getColumnData("Close");
     const high = try df.getColumnData("High");
     const low = try df.getColumnData("Low");
@@ -14,7 +17,7 @@ pub fn AD(df: *DataFrame(f64), allocator: std.mem.Allocator) !Column(f64) {
         return MyError.RowColumnMismatch;
     }
 
-    var adColumn = try Column(f64).init(allocator, "AD");
+    var ads = try allocator.alloc(f64, high.len);
     var ad: f64 = 0.0;
 
     for (0..close.len) |i| {
@@ -27,10 +30,10 @@ pub fn AD(df: *DataFrame(f64), allocator: std.mem.Allocator) !Column(f64) {
         const clv = if (range != 0.0) (2.0 * c - h - l) / range else 0.0;
 
         ad += clv * v;
-        try adColumn.push(ad);
+        ads[i] = ad;
     }
 
-    return adColumn;
+    return ads;
 }
 
 test "AD calculation works correctly" {
@@ -44,14 +47,13 @@ test "AD calculation works correctly" {
     try df.addColumnWithData("Close", &[_]f64{ 7.0, 10.0, 12.0 });
     try df.addColumnWithData("Volume", &[_]f64{ 1000.0, 1500.0, 2000.0 });
 
-    var adColumn = try AD(&df, gpa);
-    defer adColumn.deinit();
+    const adColumn = try AD(&df, gpa);
+    defer gpa.free(adColumn);
 
-    try std.testing.expect(adColumn.len() == 3);
-    std.debug.print("AD values: {}\n", .{adColumn.get(1)});
-    try std.testing.expect(std.math.approxEqAbs(f64, adColumn.get(0), -200, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, adColumn.get(1), 300, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, adColumn.get(2), 1157.1428571428571, 1e-9));
+    try std.testing.expect(adColumn.len == 3);
+    try std.testing.expect(std.math.approxEqAbs(f64, adColumn[0], -200, 1e-9));
+    try std.testing.expect(std.math.approxEqAbs(f64, adColumn[1], 300, 1e-9));
+    try std.testing.expect(std.math.approxEqAbs(f64, adColumn[2], 1157.1428571428571, 1e-9));
 }
 
 test "AD handles row-column mismatch" {
@@ -80,11 +82,11 @@ test "AD handles division by zero gracefully" {
     try df.addColumnWithData("Close", &[_]f64{ 10.0, 10.0, 10.0 });
     try df.addColumnWithData("Volume", &[_]f64{ 1000.0, 1500.0, 2000.0 });
 
-    var adColumn = try AD(&df, gpa);
-    defer adColumn.deinit();
+    const adColumn = try AD(&df, gpa);
+    defer gpa.free(adColumn);
 
-    try std.testing.expect(adColumn.len() == 3);
-    try std.testing.expect(adColumn.get(0) == 0.0);
-    try std.testing.expect(adColumn.get(1) == 0.0);
-    try std.testing.expect(adColumn.get(2) == 0.0);
+    try std.testing.expect(adColumn.len == 3);
+    try std.testing.expect(adColumn[0] == 0.0);
+    try std.testing.expect(adColumn[1] == 0.0);
+    try std.testing.expect(adColumn[2] == 0.0);
 }

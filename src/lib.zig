@@ -6,4 +6,6 @@ pub const MyError = @import("dataframe.zig").MyError;
 pub const AD = @import("ad.zig").AD;
 pub const OBV = @import("ad.zig").OBV;
 pub const EMA = @import("ema.zig").EMA;
+pub const EMAK = @import("ema.zig").EMAK;
 pub const ADOSC = @import("adosc.zig").ADOSC;
+pub const MACD = @import("adosc.zig").MACD;
