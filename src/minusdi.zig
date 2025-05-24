@@ -1,6 +1,32 @@
 const std = @import("std");
 const DataFrame = @import("./lib.zig").DataFrame;
 
+/// Calculates the Minus Directional Indicator (-DI) for a given DataFrame of f64 values over a specified period.
+///
+/// The Minus Directional Indicator (-DI) is a technical analysis indicator used to measure the presence of a downtrend.
+/// It is part of the Directional Movement System developed by J. Welles Wilder.
+///
+/// Formula:
+///   - Calculate the Minus Directional Movement (-DM):
+///       -DM = previous_low - current_low (if previous_low - current_low > current_high - previous_high and > 0, else 0)
+///   - Calculate the True Range (TR):
+///       TR = max(current_high - current_low, abs(current_high - previous_close), abs(current_low - previous_close))
+///   - Smooth the -DM and TR values over the given period (typically using a Wilder's smoothing technique).
+///   - -DI = 100 * (Smoothed -DM / Smoothed TR)
+///
+/// Parameters:
+///   - df: Pointer to a DataFrame containing f64 values with columns: high, low, close.
+///   - period: The number of periods to use for smoothing (e.g., 14).
+///   - allocator: The allocator to use for memory management.
+///
+/// Returns:
+///   - An array of f64 values representing the -DI for each period in the input DataFrame.
+///
+/// Errors:
+///   - Returns an error if memory allocation fails or if the input DataFrame is invalid.
+///
+/// Reference:
+///   - J. Welles Wilder, "New Concepts in Technical Trading Systems", 1978.
 pub fn MinusDI(df: *const DataFrame(f64), period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = df.getRowCount();
     var out = try allocator.alloc(f64, len);

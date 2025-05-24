@@ -6,6 +6,29 @@ const EMAK = @import("./lib.zig").EMAK;
 const EMA = @import("./lib.zig").EMA;
 const MyError = @import("./lib.zig").MyError;
 
+/// Calculates the Moving Average Convergence Divergence (MACD) indicator for a given DataFrame of f64 values.
+///
+/// The MACD is a trend-following momentum indicator that shows the relationship between two moving averages of prices.
+/// It is calculated using the following formulas:
+///   - MACD Line = EMA(fastPeriod) - EMA(slowPeriod)
+///   - Signal Line = EMA(MACD Line, signalPeriod)
+///   - Histogram = MACD Line - Signal Line
+///
+/// Parameters:
+///   - df: Pointer to a DataFrame containing input data as f64 values.
+///   - inFastPeriod: The period for the fast EMA (typically 12).
+///   - inSlowPeriod: The period for the slow EMA (typically 26).
+///   - inSignalPeriod: The period for the signal line EMA (typically 9).
+///   - allocator: Allocator used for memory management.
+///
+/// Returns:
+///   - A struct containing three slices of f64:
+///       1. The MACD line values.
+///       2. The Signal line values.
+///       3. The Histogram values.
+///
+/// Errors:
+///   - Returns an error if memory allocation fails or if input parameters are invalid.
 pub fn MACD(
     df: *const DataFrame(f64),
     inFastPeriod: usize,

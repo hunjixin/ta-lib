@@ -2,6 +2,7 @@ const std = @import("std");
 const Column = @import("./lib.zig").Column;
 const DataFrame = @import("./lib.zig").DataFrame;
 const MyError = @import("./lib.zig").MyError;
+
 // The AD function calculates the Accumulation/Distribution Line (ADL) for a given DataFrame.
 // Formula: ADL = SUM(((2 * Close - High - Low) / (High - Low)) * Volume)
 // This is a cumulative indicator that uses the relationship between the stock's price and volume

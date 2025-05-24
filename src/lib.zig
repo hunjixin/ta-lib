@@ -1,4 +1,3 @@
-pub const add = @import("add.zig").add;
 pub const DataFrame = @import("dataframe.zig").DataFrame;
 pub const Column = @import("dataframe.zig").Column;
 pub const MyError = @import("dataframe.zig").MyError;
@@ -13,3 +12,4 @@ pub const SMA = @import("adosc.zig").SMA;
 pub const ADX = @import("adosc.zig").ADX;
 pub const PlusDI = @import("plusdi.zig").PlusDI;
 pub const MinusDI = @import("minusdi.zig").MinusDI;
+pub const RSI = @import("minusdi.zig").RSI;

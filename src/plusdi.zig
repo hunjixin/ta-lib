@@ -1,6 +1,26 @@
 const std = @import("std");
 const DataFrame = @import("./lib.zig").DataFrame;
 
+/// Calculates the Plus Directional Indicator (+DI) for a given DataFrame of f64 values over a specified period.
+///
+/// The Plus Directional Indicator (+DI) is a technical analysis indicator that measures the presence of upward price movement.
+/// It is part of the Directional Movement System developed by J. Welles Wilder.
+///
+/// Formula:
+///   +DM = current_high - previous_high (if current_high - previous_high > previous_low - current_low and > 0, else 0)
+///   TR = max(current_high - current_low, abs(current_high - previous_close), abs(current_low - previous_close))
+///   +DI = 100 * (Smoothed +DM / Smoothed TR)
+///
+/// Arguments:
+///   df: Pointer to a DataFrame containing f64 price data (typically with columns: high, low, close).
+///   period: The number of periods to use for smoothing (e.g., 14).
+///   allocator: Allocator to use for result memory allocation.
+///
+/// Returns:
+///   An array of f64 values representing the +DI for each period in the input DataFrame.
+///
+/// Errors:
+///   Returns an error if memory allocation fails or if the input DataFrame is invalid.
 pub fn PlusDI(df: *const DataFrame(f64), period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = df.getRowCount();
     var out = try allocator.alloc(f64, len);
