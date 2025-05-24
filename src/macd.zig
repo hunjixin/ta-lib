@@ -7,7 +7,7 @@ const EMA = @import("./lib.zig").EMA;
 const MyError = @import("./lib.zig").MyError;
 
 pub fn MACD(
-    df: *DataFrame(f64),
+    df: *const DataFrame(f64),
     inFastPeriod: usize,
     inSlowPeriod: usize,
     inSignalPeriod: usize,

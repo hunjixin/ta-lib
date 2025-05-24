@@ -6,8 +6,7 @@ const MyError = @import("./lib.zig").MyError;
 // Formula: ADL = SUM(((2 * Close - High - Low) / (High - Low)) * Volume)
 // This is a cumulative indicator that uses the relationship between the stock's price and volume
 // to determine the flow of money into or out of a stock over time.
-pub fn AD(df: *DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
-    //const len = try df.getColumnData("Close");
+pub fn AD(df: *const DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
     const high = try df.getColumnData("High");
     const low = try df.getColumnData("Low");
     const close = try df.getColumnData("Close");

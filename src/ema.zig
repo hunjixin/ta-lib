@@ -25,6 +25,7 @@ pub fn EMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]
 
 pub fn EMAK(prices: []const f64, period: usize, k: f64, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    @memset(out, 0);
 
     const lookback_total = period - 1;
     const start_idx: usize = lookback_total;

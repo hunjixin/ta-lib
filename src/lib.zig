@@ -9,3 +9,5 @@ pub const EMA = @import("ema.zig").EMA;
 pub const EMAK = @import("ema.zig").EMAK;
 pub const ADOSC = @import("adosc.zig").ADOSC;
 pub const MACD = @import("adosc.zig").MACD;
+pub const SMA = @import("adosc.zig").SMA;
+pub const ADX = @import("adosc.zig").ADX;

@@ -103,7 +103,7 @@ pub fn DataFrame(comptime T: type) type {
             return self.columns.items[idx].get(rowIndex);
         }
 
-        pub fn row_count(self: *const Self) usize {
+        pub fn getRowCount(self: *const Self) usize {
             if (self.columns.items.len == 0) {
                 return 0;
             }

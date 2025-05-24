@@ -29,7 +29,7 @@ const MyError = @import("./lib.zig").MyError;
 /// Returns:
 /// - The ADOSC value, which indicates the strength of buying or selling pressure.
 pub fn ADOSC(
-    df: *DataFrame(f64),
+    df: *const DataFrame(f64),
     fast_period: usize,
     slow_period: usize,
     allocator: std.mem.Allocator,
