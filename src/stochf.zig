@@ -5,10 +5,36 @@ const SMA = @import("./lib.zig").SMA;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
 
-// The AD function calculates the Accumulation/Distribution Line (ADL) for a given DataFrame.
-// Formula: ADL = SUM(((2 * Close - High - Low) / (High - Low)) * Volume)
-// This is a cumulative indicator that uses the relationship between the stock's price and volume
-// to determine the flow of money into or out of a stock over time.
+/// Calculates the Stochastic Fast Oscillator (StochF) for the given data frame.
+///
+/// The Stochastic Fast Oscillator is a momentum indicator comparing a particular closing price of a security to a range of its prices over a certain period of time.
+/// It consists of two lines:
+///   - %K (FastK): The current close relative to the recent high/low range.
+///   - %D (FastD): A moving average of %K.
+///
+/// Formula:
+///   FastK = 100 * (Close - LowestLow) / (HighestHigh - LowestLow)
+///   FastD = SMA(FastK, inFastDPeriod)
+///
+/// Where:
+///   - Close: Current closing price
+///   - LowestLow: Lowest low over the last `inFastKPeriod` periods
+///   - HighestHigh: Highest high over the last `inFastKPeriod` periods
+///   - SMA: Simple Moving Average
+///
+/// Parameters:
+///   - df: Pointer to a DataFrame containing f64 values (price data)
+///   - inFastKPeriod: Number of periods for the FastK calculation
+///   - inFastDPeriod: Number of periods for the FastD (moving average) calculation
+///   - allocator: Allocator for memory management
+///
+/// Returns:
+///   A struct containing two slices:
+///     - []f64: FastK values
+///     - []f64: FastD values
+///
+/// Errors:
+///   Returns an error if memory allocation fails or input parameters are invalid.
 pub fn StochF(
     df: *const DataFrame(f64),
     inFastKPeriod: usize,
@@ -64,31 +90,11 @@ pub fn StochF(
     return .{ outFastK, outFastD };
 }
 
-test "StochF calculation works correctly" {
-    const gpa = std.testing.allocator;
-
-    var df = try DataFrame(f64).init(gpa);
-    defer df.deinit();
-
-    try df.addColumnWithData("High", &[_]f64{ 10.0, 12.0, 14.0, 13.0, 15.0 });
-    try df.addColumnWithData("Low", &[_]f64{ 5.0, 6.0, 7.0, 8.0, 9.0 });
-    try df.addColumnWithData("Close", &[_]f64{ 7.0, 10.0, 12.0, 11.0, 14.0 });
-
-    // Use FastK period = 3, FastD period = 2
-    const result = try StochF(&df, 3, 2, gpa);
-    defer gpa.free(result[0]);
-    defer gpa.free(result[1]);
-
-    std.debug.print("StochF: {any}\n", .{result});
-}
-
 test "StochF calculation works with bigger dataset" {
     const gpa = std.testing.allocator;
-
     var df = try DataFrame(f64).init(gpa);
     defer df.deinit();
 
-    // 直接使用固定的随机数据字面量，保证每次数据一致且不依赖生成器
     const high_data = [_]f64{
         15.2, 16.8, 18.5, 19.1, 20.7, 22.3, 23.0, 24.8, 26.1, 27.5,
         28.9, 30.2, 31.7, 33.0, 34.4, 35.8, 37.1, 38.5, 39.9, 41.2,

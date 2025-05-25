@@ -14,3 +14,4 @@ pub const PlusDI = @import("plusdi.zig").PlusDI;
 pub const MinusDI = @import("minusdi.zig").MinusDI;
 pub const RSI = @import("minusdi.zig").RSI;
 pub const StochF = @import("stochf.zig").StochF;
+pub const Stoch = @import("stoch.zig").Stoch;
