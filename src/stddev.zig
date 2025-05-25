@@ -2,26 +2,23 @@ const std = @import("std");
 const DataFrame = @import("./lib.zig").DataFrame;
 const VAR = @import("./lib.zig").VAR;
 
-/// Calculates the Simple Moving Average (SMA) for a given price array and period.
+/// Calculates the standard deviation of a given slice of prices over a specified period.
 ///
+/// The standard deviation is a statistical measure of volatility, representing how much the values deviate from the mean.
 /// Formula:
-///     SMA_t = (P_{t} + P_{t-1} + ... + P_{t-period+1}) / period
-/// where:
-///     - SMA_t: the simple moving average at time t
-///     - P_{t}: the price at time t
-///     - period: the number of periods to average
+///     stddev = sqrt(sum((x_i - mean)^2) / period) * inNbDev
 ///
 /// Parameters:
-/// - prices: array of price data (input)
-/// - period: the window size for the moving average
-/// - allocator: memory allocator for the output array
+/// - prices: Slice of input price data (e.g., closing prices).
+/// - period: Number of periods to use for the moving window calculation.
+/// - inNbDev: The number of standard deviations to multiply the result by (commonly 1.0 or 2.0).
+/// - allocator: Allocator used for memory allocation of the result.
 ///
 /// Returns:
-/// - Array of SMA values (length equals prices.len)
+/// - A slice of f64 values representing the calculated standard deviation for each period.
 ///
-/// Note:
-/// - For indices less than period-1, the output will be zero (not enough data to compute SMA).
-///
+/// Errors:
+/// - Returns an error if memory allocation fails or if input parameters are invalid.
 pub fn StdDev(prices: []const f64, period: usize, inNbDev: f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try VAR(prices, period, allocator);
     if (!std.math.approxEqAbs(f64, inNbDev, 1.0, 1e-9)) {
@@ -67,7 +64,6 @@ test "StdDev work correctly" {
     {
         const result = try StdDev(prices[0..], period, 2, allocator);
         defer allocator.free(result);
-        std.debug.print("{any}", .{result});
         try std.testing.expectEqual(result.len, prices.len);
         const expect = [_]f64{ 0, 0, 0, 0, 2.8284271247461903, 2.8284271247461903, 2.8284271247461903, 2.8284271247461903, 2.8284271247461903, 2.8284271247461903 };
         for (expect, 0..) |v, i| {

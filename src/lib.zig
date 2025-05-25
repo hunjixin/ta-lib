@@ -21,3 +21,4 @@ pub const WillR = @import("willr.zig").WillR;
 pub const MOM = @import("mom.zig").MOM;
 pub const VAR = @import("var.zig").VAR;
 pub const StdDev = @import("stddev.zig").StdDev;
+pub const Bbands = @import("stddev.zig").Bbands;

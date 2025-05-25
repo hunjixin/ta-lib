@@ -5,7 +5,7 @@ refrence： https://ta-lib.org/functions/
 
 ## Checklist
 
-- [ ] BBands
+- [x] BBands
 - [ ] Dema
 - [x] Ema
 - [ ] HtTrendline

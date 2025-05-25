@@ -1,6 +1,25 @@
 const std = @import("std");
 const DataFrame = @import("./lib.zig").DataFrame;
 
+/// Calculates the variance of the given `prices` over a specified `period`.
+///
+/// The variance is a statistical measure of the dispersion of price values,
+/// defined by the formula:
+///
+///     VAR = (1/N) * Σ (price_i - mean)^2
+///
+/// where N is the period, price_i is each price in the period, and mean is the average price over the period.
+///
+/// Parameters:
+/// - `prices`: Slice of input price values (f64).
+/// - `period`: The number of periods to use for the variance calculation.
+/// - `allocator`: Allocator used for the result array.
+///
+/// Returns:
+/// - A newly allocated slice of f64 containing the variance values for each period.
+///
+/// Errors:
+/// - Returns an error if allocation fails or if the input is invalid.
 pub fn VAR(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
     @memset(out, 0);
