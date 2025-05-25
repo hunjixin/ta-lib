@@ -137,8 +137,7 @@ test "ADOSC calculation" {
     defer gpa.free(adosc_values);
 
     // Print ADOSC values
-    std.debug.print("ADOSC values: {any}\n", .{adosc_values});
     for (2..expected_adosc.len) |i| {
-        try std.testing.expect(std.math.approxEqAbs(f64, adosc_values[i], expected_adosc[i], 1e-9));
+        try std.testing.expectApproxEqAbs(expected_adosc[i], adosc_values[i], 1e-9);
     }
 }

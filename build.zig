@@ -12,7 +12,11 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
         .error_tracing = true,
     });
-    const lib = b.addStaticLibrary(.{ .name = "ta_lib", .root_module = rootModule });
+    const lib = b.addLibrary(.{
+        .name = "ta_lib",
+        .zig_lib_dir = b.path("src"),
+        .root_module = rootModule,
+    });
 
     b.installArtifact(lib);
 
@@ -31,8 +35,13 @@ pub fn build(b: *std.Build) !void {
         const path_buf = try std.fs.path.join(allocator, &[_][]const u8{ "src", entry.name });
         defer allocator.free(path_buf);
 
-        const test_compiled = b.addTest(.{ .name = entry.name, .root_module = rootModule });
-
+        const testModule = b.createModule(.{
+            .root_source_file = b.path(path_buf),
+            .target = target,
+            .optimize = optimize,
+            .error_tracing = true,
+        });
+        const test_compiled = b.addTest(.{ .name = entry.name, .root_module = testModule });
         const test_run = b.addRunArtifact(test_compiled);
         run_tests.dependOn(&test_run.step);
     }

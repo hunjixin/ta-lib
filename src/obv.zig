@@ -40,11 +40,10 @@ test "OBV calculation" {
     defer gpa.free(obvCol);
 
     // Verify OBV values
-    try std.testing.expect(std.math.approxEqAbs(f64, 0.0, obvCol[0], 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, 1500.0, obvCol[1], 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, 300.0, obvCol[2], 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, 2100.0, obvCol[3], 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, 500.0, obvCol[4], 1e-9));
+    const expected = [_]f64{ 0.0, 1500.0, 300.0, 2100.0, 500.0 };
+    for (expected, 0..) |val, i| {
+        try std.testing.expectApproxEqAbs(val, obvCol[i], 1e-9);
+    }
 }
 
 test "OBV with mismatched column lengths" {

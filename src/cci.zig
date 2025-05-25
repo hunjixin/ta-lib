@@ -101,8 +101,6 @@ test "CCI work correctly" {
     const adx = try CCI(&df, period, allocator);
     defer allocator.free(adx);
 
-    std.debug.print("CCI: {any}\n", .{adx});
-
     const expected = [_]f64{ 0, 0, 0, 0, 113.82113821138218, 92.10526315789485, 47.61904761904769, 142.85714285714295, 61.40350877192985, 166.6666666666667, 41.09303295786401, -51.64319248826292, -50.458715596330265, -54.80984340044743, -32.828282828282845 };
     for (adx, 0..) |v, i| {
         try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
@@ -127,8 +125,6 @@ test "CCI handles with 1 period" {
     const period = 1;
     const adx = try CCI(&df, period, allocator);
     defer allocator.free(adx);
-
-    std.debug.print("CCI: {any}\n", .{adx});
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
     for (adx, 0..) |v, i| {

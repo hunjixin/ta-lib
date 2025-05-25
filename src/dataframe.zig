@@ -94,7 +94,7 @@ pub fn DataFrame(comptime T: type) type {
             return MyError.ColumnNotFound;
         }
 
-        pub fn getValue(self: *const Self, colName: []const u8, rowIndex: usize) T {
+        pub fn getValue(self: *const Self, colName: []const u8, rowIndex: usize) !T {
             const idx = try self.findColumnByName(colName);
 
             if (rowIndex >= self.columns.items[idx].len())

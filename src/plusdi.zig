@@ -85,8 +85,6 @@ test "PlusDI " {
     const adx = try PlusDI(&df, period, allocator);
     defer allocator.free(adx);
 
-    std.debug.print("ADX: {any}\n", .{adx});
-
     const expected = [_]f64{ 0, 0, 0, 0, 0, 45.652173913043484, 40.19138755980862, 53.9594843462247, 47.17246930972028, 96.36207410281818, 45.38278250731527, 45.02405540630219, 46.0893931101081, 45.53786546706974, 47.11983850178317 };
     for (adx, 0..) |v, i| {
         try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
@@ -112,10 +110,8 @@ test "PlusDI 1 perid " {
     const adx = try PlusDI(&df, period, allocator);
     defer allocator.free(adx);
 
-    std.debug.print("ADX: {any}\n", .{adx});
-
     const expected = [_]f64{ 0, 0.6666666666666666, 0, 0.6666666666666666, 0, 0.5, 0, 1, 0, 1, 0, 0, 1, 0, 1 };
     for (adx, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }

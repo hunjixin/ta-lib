@@ -66,15 +66,10 @@ test "EMA calculation with valid input" {
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, prices.len);
-    for (0..4) |i| {
-        try std.testing.expect(std.math.approxEqAbs(f64, result[i], 0, 1e-9));
+    const expect = [_]f64{ 0, 0, 0, 0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0 };
+    for (expect, 0..) |v, i| {
+        try std.testing.expectApproxEqAbs(v, result[i], 1e-9);
     }
-    try std.testing.expect(std.math.approxEqAbs(f64, result[4], 3.0, 1e-9)); // SMA for first 3 prices
-    try std.testing.expect(std.math.approxEqAbs(f64, result[5], 4.0, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, result[6], 5.0, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, result[7], 6.0, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, result[8], 7.0, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, result[9], 8.0, 1e-9));
 }
 
 test "EMA calculation with empty input" {

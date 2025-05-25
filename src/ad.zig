@@ -51,9 +51,9 @@ test "AD calculation works correctly" {
     defer gpa.free(adColumn);
 
     try std.testing.expect(adColumn.len == 3);
-    try std.testing.expect(std.math.approxEqAbs(f64, adColumn[0], -200, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, adColumn[1], 300, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, adColumn[2], 1157.1428571428571, 1e-9));
+    try std.testing.expectApproxEqAbs(-200, adColumn[0], 1e-9);
+    try std.testing.expectApproxEqAbs(300, adColumn[1], 1e-9);
+    try std.testing.expectApproxEqAbs(1157.1428571428571, adColumn[2], 1e-9);
 }
 
 test "AD handles row-column mismatch" {

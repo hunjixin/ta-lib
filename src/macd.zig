@@ -120,20 +120,19 @@ test "MACD calculation with expected values" {
     // Validate the result length
     try std.testing.expect(histogram.len == close_prices.len);
 
-    for (0..32) |i| {
-        try std.testing.expect(std.math.approxEqAbs(f64, macd[i], 0, 1e-9));
-        try std.testing.expect(std.math.approxEqAbs(f64, histogram[i], 0, 1e-9));
-        try std.testing.expect(std.math.approxEqAbs(f64, signal[i], 0, 1e-9));
+    const expected_macd = [_]f64{
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 7, 7,
+    };
+    const expected_histogram = [_]f64{
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4.48, 3.5839999999999996,
+    };
+    const expected_signal = [_]f64{
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.4000000000000001, 2.52, 3.4160000000000004,
+    };
+
+    for (0..35) |i| {
+        try std.testing.expectApproxEqAbs(macd[i], expected_macd[i], 1e-9);
+        try std.testing.expectApproxEqAbs(histogram[i], expected_histogram[i], 1e-9);
+        try std.testing.expectApproxEqAbs(signal[i], expected_signal[i], 1e-9);
     }
-    try std.testing.expect(std.math.approxEqAbs(f64, macd[32], 7, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, macd[33], 7, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, macd[34], 7, 1e-9));
-
-    try std.testing.expect(std.math.approxEqAbs(f64, histogram[32], 0, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, histogram[33], 4.48, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, histogram[34], 3.5839999999999996, 1e-9));
-
-    try std.testing.expect(std.math.approxEqAbs(f64, signal[32], 1.4000000000000001, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, signal[33], 2.52, 1e-9));
-    try std.testing.expect(std.math.approxEqAbs(f64, signal[34], 3.4160000000000004, 1e-9));
 }
