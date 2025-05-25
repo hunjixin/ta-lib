@@ -22,6 +22,7 @@ const DataFrame = @import("./lib.zig").DataFrame;
 /// - For indices less than period-1, the output will be zero (not enough data to compute SMA).
 pub fn SMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    @memset(out, 0);
     var da: f64 = 0.0;
     const dived: f64 = @floatFromInt(period);
 
