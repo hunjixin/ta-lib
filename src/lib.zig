@@ -19,3 +19,5 @@ pub const StochRsi = @import("stochrsi.zig").StochRsi;
 pub const CCI = @import("cci.zig").CCI;
 pub const WillR = @import("willr.zig").WillR;
 pub const MOM = @import("mom.zig").MOM;
+pub const VAR = @import("var.zig").VAR;
+pub const StdDev = @import("stddev.zig").StdDev;

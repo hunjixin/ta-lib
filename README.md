@@ -28,7 +28,7 @@ refrence： https://ta-lib.org/functions/
 - [ ] AroonOsc
 - [ ] Bop
 - [ ] Cmo
-- [x]  Cci
+- [x] Cci
 - [ ] Dx
 - [x] Macd
 - [ ] MacdExt
@@ -72,9 +72,9 @@ refrence： https://ta-lib.org/functions/
 - [ ] LinearRegAngle
 - [ ] LinearRegIntercept
 - [ ] LinearRegSlope
-- [ ] StdDev
+- [x] StdDev
 - [ ] Tsf
-- [ ] Var
+- [x] Var
 - [ ] Acos
 - [ ] Asin
 - [ ] Atan
