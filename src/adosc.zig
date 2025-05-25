@@ -35,10 +35,10 @@ pub fn ADOSC(
     allocator: std.mem.Allocator,
 ) ![]f64 {
     // Get columns
-    const high = try df.getColumnData("High");
-    const low = try df.getColumnData("Low");
-    const close = try df.getColumnData("Close");
-    const volume = try df.getColumnData("Volume");
+    const high = try df.getColumnData("high");
+    const low = try df.getColumnData("low");
+    const close = try df.getColumnData("close");
+    const volume = try df.getColumnData("volume");
     const len = high.len;
 
     if (fast_period < 2 or slow_period < 2) {
@@ -122,10 +122,10 @@ test "ADOSC calculation" {
     defer df.deinit();
 
     // Add "High", "Low", "Close", and "Volume" columns
-    try df.addColumnWithData("High", &[_]f64{ 10.0, 12.0, 14.0, 16.0, 18.0 });
-    try df.addColumnWithData("Low", &[_]f64{ 5.0, 6.0, 7.0, 8.0, 9.0 });
-    try df.addColumnWithData("Close", &[_]f64{ 7.0, 10.0, 12.0, 15.0, 17.0 });
-    try df.addColumnWithData("Volume", &[_]f64{ 1000.0, 1500.0, 2000.0, 2500.0, 3000.0 });
+    try df.addColumnWithData("high", &[_]f64{ 10.0, 12.0, 14.0, 16.0, 18.0 });
+    try df.addColumnWithData("low", &[_]f64{ 5.0, 6.0, 7.0, 8.0, 9.0 });
+    try df.addColumnWithData("close", &[_]f64{ 7.0, 10.0, 12.0, 15.0, 17.0 });
+    try df.addColumnWithData("volume", &[_]f64{ 1000.0, 1500.0, 2000.0, 2500.0, 3000.0 });
 
     // Expected ADOSC values (manually calculated or from a trusted source)
     // Adjust expected ADOSC values to have 5 elements

@@ -40,9 +40,9 @@ pub fn Stoch(
     inSlowDPeriod: usize,
     allocator: std.mem.Allocator,
 ) !struct { []f64, []f64 } {
-    const high = try df.getColumnData("High");
-    const low = try df.getColumnData("Low");
-    const close = try df.getColumnData("Close");
+    const high = try df.getColumnData("high");
+    const low = try df.getColumnData("low");
+    const close = try df.getColumnData("close");
     const len = close.len;
 
     var outSlowK = try allocator.alloc(f64, len);
@@ -111,9 +111,9 @@ test "Stoch calculation works with bigger dataset" {
         27.7, 29.1, 30.5, 31.8, 33.2, 34.7, 36.0, 37.3, 38.7, 40.0,
     };
 
-    try df.addColumnWithData("High", &high_data);
-    try df.addColumnWithData("Low", &low_data);
-    try df.addColumnWithData("Close", &close_data);
+    try df.addColumnWithData("high", &high_data);
+    try df.addColumnWithData("low", &low_data);
+    try df.addColumnWithData("close", &close_data);
 
     {
         const result = try Stoch(&df, 5, 3, 3, gpa);

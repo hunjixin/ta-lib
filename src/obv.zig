@@ -4,8 +4,8 @@ const DataFrame = @import("./lib.zig").DataFrame;
 const MyError = @import("./lib.zig").MyError;
 
 pub fn OBV(df: *DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
-    const close = try df.getColumnData("Close");
-    const volume = try df.getColumnData("Volume");
+    const close = try df.getColumnData("close");
+    const volume = try df.getColumnData("volume");
 
     if (close.len != volume.len) return MyError.RowColumnMismatch;
 
@@ -33,13 +33,9 @@ test "OBV calculation" {
     var df = try DataFrame(f64).init(gpa);
     defer df.deinit();
 
-    // Add "Close" column
-    try df.addColumnWithData("Close", &[_]f64{ 100.0, 105.0, 102.0, 108.0, 107.0 });
+    try df.addColumnWithData("close", &[_]f64{ 100.0, 105.0, 102.0, 108.0, 107.0 });
+    try df.addColumnWithData("volume", &[_]f64{ 1000.0, 1500.0, 1200.0, 1800.0, 1600.0 });
 
-    // Add "Volume" column
-    try df.addColumnWithData("Volume", &[_]f64{ 1000.0, 1500.0, 1200.0, 1800.0, 1600.0 });
-
-    // Calculate OBV
     const obvCol = try OBV(&df, gpa);
     defer gpa.free(obvCol);
 
@@ -58,11 +54,8 @@ test "OBV with mismatched column lengths" {
     var df = try DataFrame(f64).init(gpa);
     defer df.deinit();
 
-    // Add "Close" column
-    try df.addColumnWithData("Close", &[_]f64{ 100.0, 105.0 });
-
-    // Add "Volume" column with mismatched length
-    try df.addColumnWithData("Volume", &[_]f64{1000.0});
+    try df.addColumnWithData("close", &[_]f64{ 100.0, 105.0 });
+    try df.addColumnWithData("volume", &[_]f64{1000.0});
 
     // Attempt to calculate OBV and expect an error
     const result = OBV(&df, gpa);

@@ -8,10 +8,10 @@ const MyError = @import("./lib.zig").MyError;
 // This is a cumulative indicator that uses the relationship between the stock's price and volume
 // to determine the flow of money into or out of a stock over time.
 pub fn AD(df: *const DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
-    const high = try df.getColumnData("High");
-    const low = try df.getColumnData("Low");
-    const close = try df.getColumnData("Close");
-    const volume = try df.getColumnData("Volume");
+    const high = try df.getColumnData("high");
+    const low = try df.getColumnData("low");
+    const close = try df.getColumnData("close");
+    const volume = try df.getColumnData("volume");
 
     if (!(high.len == low.len and low.len == close.len and close.len == volume.len)) {
         return MyError.RowColumnMismatch;
@@ -42,10 +42,10 @@ test "AD calculation works correctly" {
     var df = try DataFrame(f64).init(gpa);
     defer df.deinit();
 
-    try df.addColumnWithData("High", &[_]f64{ 10.0, 12.0, 14.0 });
-    try df.addColumnWithData("Low", &[_]f64{ 5.0, 6.0, 7.0 });
-    try df.addColumnWithData("Close", &[_]f64{ 7.0, 10.0, 12.0 });
-    try df.addColumnWithData("Volume", &[_]f64{ 1000.0, 1500.0, 2000.0 });
+    try df.addColumnWithData("high", &[_]f64{ 10.0, 12.0, 14.0 });
+    try df.addColumnWithData("low", &[_]f64{ 5.0, 6.0, 7.0 });
+    try df.addColumnWithData("close", &[_]f64{ 7.0, 10.0, 12.0 });
+    try df.addColumnWithData("volume", &[_]f64{ 1000.0, 1500.0, 2000.0 });
 
     const adColumn = try AD(&df, gpa);
     defer gpa.free(adColumn);
@@ -62,10 +62,10 @@ test "AD handles row-column mismatch" {
     var df = try DataFrame(f64).init(gpa);
     defer df.deinit();
 
-    try df.addColumnWithData("High", &[_]f64{ 10.0, 12.0 });
-    try df.addColumnWithData("Low", &[_]f64{ 5.0, 6.0 });
-    try df.addColumnWithData("Close", &[_]f64{ 7.0, 10.0 });
-    try df.addColumnWithData("Volume", &[_]f64{1000.0}); // Mismatched length
+    try df.addColumnWithData("high", &[_]f64{ 10.0, 12.0 });
+    try df.addColumnWithData("low", &[_]f64{ 5.0, 6.0 });
+    try df.addColumnWithData("close", &[_]f64{ 7.0, 10.0 });
+    try df.addColumnWithData("volume", &[_]f64{1000.0}); // Mismatched length
 
     const result = AD(&df, gpa);
     try std.testing.expectError(MyError.RowColumnMismatch, result);
@@ -77,10 +77,10 @@ test "AD handles division by zero gracefully" {
     var df = try DataFrame(f64).init(gpa);
     defer df.deinit();
 
-    try df.addColumnWithData("High", &[_]f64{ 10.0, 10.0, 10.0 });
-    try df.addColumnWithData("Low", &[_]f64{ 10.0, 10.0, 10.0 }); // High == Low
-    try df.addColumnWithData("Close", &[_]f64{ 10.0, 10.0, 10.0 });
-    try df.addColumnWithData("Volume", &[_]f64{ 1000.0, 1500.0, 2000.0 });
+    try df.addColumnWithData("high", &[_]f64{ 10.0, 10.0, 10.0 });
+    try df.addColumnWithData("low", &[_]f64{ 10.0, 10.0, 10.0 }); // High == Low
+    try df.addColumnWithData("close", &[_]f64{ 10.0, 10.0, 10.0 });
+    try df.addColumnWithData("volume", &[_]f64{ 1000.0, 1500.0, 2000.0 });
 
     const adColumn = try AD(&df, gpa);
     defer gpa.free(adColumn);

@@ -24,9 +24,9 @@ pub fn StochRsi(
     var df = try DataFrame(f64).init(allocator);
     defer df.deinit();
 
-    try df.addColumnWithData("High", tempRSIBuffer);
-    try df.addColumnWithData("Low", tempRSIBuffer);
-    try df.addColumnWithData("Close", tempRSIBuffer);
+    try df.addColumnWithData("high", tempRSIBuffer);
+    try df.addColumnWithData("low", tempRSIBuffer);
+    try df.addColumnWithData("close", tempRSIBuffer);
 
     const tempk, const tempd = try StochF(&df, inFastKPeriod, inFastDPeriod, allocator);
     defer allocator.free(tempd);

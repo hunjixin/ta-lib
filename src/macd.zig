@@ -59,7 +59,7 @@ pub fn MACD(
     const lookback_signal = signalPeriod - 1;
     const lookback_total = lookback_signal + (slow_period - 1);
 
-    const prices = try df.getColumnData("Close");
+    const prices = try df.getColumnData("close");
 
     // Compute fast and slow EMA
     var fast_ema = try EMAK(prices, fast_period, k1, allocator);
@@ -109,7 +109,7 @@ test "MACD calculation with expected values" {
     defer df.deinit();
 
     var close_prices: [35]f64 = [_]f64{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0 };
-    try df.addColumnWithData("Close", close_prices[0..]);
+    try df.addColumnWithData("close", close_prices[0..]);
 
     // Call MACD function
     const macd, const signal, const histogram = try MACD(&df, 0, 0, 0, gpa);
