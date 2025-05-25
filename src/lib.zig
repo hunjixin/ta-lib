@@ -18,3 +18,4 @@ pub const Stoch = @import("stoch.zig").Stoch;
 pub const StochRsi = @import("stochrsi.zig").StochRsi;
 pub const CCI = @import("cci.zig").CCI;
 pub const WillR = @import("willr.zig").WillR;
+pub const MOM = @import("mom.zig").MOM;
