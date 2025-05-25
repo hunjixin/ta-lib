@@ -79,7 +79,6 @@ pub fn StochF(
             0.0;
     }
 
-    std.debug.print("tempBuffer {any}", .{tempBuffer});
     const tempBuffer1 = try SMA(tempBuffer, inFastDPeriod, allocator);
     defer allocator.free(tempBuffer1);
     for (lookbackTotal..len) |j| {
