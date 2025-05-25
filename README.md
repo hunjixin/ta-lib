@@ -2,3 +2,102 @@
 ta lib implementation in zig
 
 refrence： https://ta-lib.org/functions/
+
+## Checklist
+
+- [ ] BBands
+- [ ] Dema
+- [x] Ema
+- [ ] HtTrendline
+- [ ] Kama
+- [ ] Mama
+- [ ] MaVp
+- [ ] MidPoint
+- [ ] MidPrice
+- [ ] Sar
+- [ ] SarExt
+- [ ] Sma
+- [ ] T3
+- [ ] Tema
+- [ ] Trima
+- [ ] Wma
+- [x] Adx
+- [ ] AdxR
+- [ ] Apo
+- [ ] Aroon
+- [ ] AroonOsc
+- [ ] Bop
+- [ ] Cmo
+- [x]  Cci
+- [ ] Dx
+- [x] Macd
+- [ ] MacdExt
+- [ ] MacdFix
+- [x] MinusDI
+- [ ] MinusDM
+- [ ] Mfi
+- [x] Mom
+- [x] PlusDI
+- [ ] PlusDM
+- [ ] Ppo
+- [ ] Rocp
+- [ ] Roc
+- [ ] Rocr
+- [ ] Rocr100
+- [x] Rsi
+- [x] Stoch
+- [x] StochF
+- [x] StochRsi
+- [ ] Trix
+- [ ] UltOsc
+- [x] WillR
+- [x] Ad
+- [x] AdOsc
+- [x] Obv
+- [ ] Atr
+- [ ] Natr
+- [ ] TRange
+- [ ] AvgPrice
+- [ ] MedPrice
+- [ ] TypPrice
+- [ ] WclPrice
+- [ ] HtDcPeriod
+- [ ] HtDcPhase
+- [ ] HtPhasor
+- [ ] HtSine
+- [ ] HtTrendMode
+- [ ] Beta
+- [ ] Correl
+- [ ] LinearReg
+- [ ] LinearRegAngle
+- [ ] LinearRegIntercept
+- [ ] LinearRegSlope
+- [ ] StdDev
+- [ ] Tsf
+- [ ] Var
+- [ ] Acos
+- [ ] Asin
+- [ ] Atan
+- [ ] Ceil
+- [ ] Cos
+- [ ] Cosh
+- [ ] Exp
+- [ ] Floor
+- [ ] Ln
+- [ ] Log10
+- [ ] Sin
+- [ ] Sinh
+- [ ] Sqrt
+- [ ] Tan
+- [ ] Tanh
+- [ ] Add
+- [ ] Div
+- [ ] Max
+- [ ] MaxIndex
+- [ ] Min
+- [ ] MinIndex
+- [ ] MinMax
+- [ ] MinMaxIndex
+- [ ] Mult
+- [ ] Sub
+- [ ] Sum
