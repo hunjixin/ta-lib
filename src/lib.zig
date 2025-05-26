@@ -28,3 +28,4 @@ pub const KAMA = @import("kama.zig").KAMA;
 pub const MAMA = @import("mama.zig").MAMA;
 pub const MAVP = @import("mavp.zig").MAVP;
 pub const MidPoint = @import("midpoint.zig").MidPoint;
+pub const MidPrice = @import("midprice.zig").MidPrice;
