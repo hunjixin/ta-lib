@@ -9,14 +9,14 @@ refrence： https://ta-lib.org/functions/
 - [x] Dema
 - [x] Ema
 - [x] HtTrendline
-- [ ] Kama
-- [ ] Mama
+- [x] Kama
+- [x] Mama
 - [ ] MaVp
 - [ ] MidPoint
 - [ ] MidPrice
 - [ ] Sar
 - [ ] SarExt
-- [ ] Sma
+- [x] Sma
 - [ ] T3
 - [ ] Tema
 - [ ] Trima
