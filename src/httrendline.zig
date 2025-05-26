@@ -1,6 +1,25 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 
+/// Calculates the Hilbert Transform Trendline (HT Trendline) for a given array of prices.
+/// 
+/// This function applies the Hilbert Transform to the input price series to estimate the trendline,
+/// which can be used for technical analysis in financial applications.
+/// 
+/// Parameters:
+/// - `prices`: A slice of f64 values representing the input price series.
+/// - `allocator`: The allocator to use for allocating the result array.
+/// 
+/// Returns:
+/// - An allocated slice of f64 values containing the calculated trendline.
+/// 
+/// Errors:
+/// - Returns an error if memory allocation fails.
+/// 
+/// Example:
+/// ```zig
+/// const trendline = try HtTrendLine(prices, allocator);
+/// ```
 pub fn HtTrendLine(prices: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const a = 0.0962;
     const b = 0.5769;
