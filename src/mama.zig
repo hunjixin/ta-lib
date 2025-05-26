@@ -1,16 +1,16 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 /// Calculates the MESA Adaptive Moving Average (MAMA) and Following Adaptive Moving Average (FAMA) for a given array of prices.
-/// 
+///
 /// - `prices`: Slice of input price data as f64 values.
 /// - `inFastLimit`: Fast limit parameter for the MAMA calculation.
 /// - `inSlowLimit`: Slow limit parameter for the MAMA calculation.
 /// - `allocator`: Allocator used for memory allocation of the output arrays.
-/// 
+///
 /// Returns a struct containing two slices:
 ///   - The first slice is the calculated MAMA values.
 ///   - The second slice is the calculated FAMA values.
-/// 
+///
 /// Returns an error if memory allocation fails.
 pub fn MAMA(prices: []const f64, inFastLimit: f64, inSlowLimit: f64, allocator: std.mem.Allocator) !struct { []f64, []f64 } {
     const math = std.math;

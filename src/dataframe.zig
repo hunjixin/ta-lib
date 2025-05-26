@@ -5,6 +5,7 @@ pub const MyError = error{
     RowIndexOutOfBounds,
     RowColumnMismatch,
     TooFewDataPoints,
+    InvalidInput,
 };
 
 pub fn Column(comptime T: type) type {

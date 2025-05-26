@@ -11,7 +11,7 @@ refrence： https://ta-lib.org/functions/
 - [x] HtTrendline
 - [x] Kama
 - [x] Mama
-- [ ] MaVp
+- [x] MaVp
 - [ ] MidPoint
 - [ ] MidPrice
 - [ ] Sar

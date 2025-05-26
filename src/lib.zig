@@ -26,3 +26,4 @@ pub const DEMA = @import("dema.zig").DEMA;
 pub const HtTrendLine = @import("httrendline.zig").HtTrendLine;
 pub const KAMA = @import("kama.zig").KAMA;
 pub const MAMA = @import("mama.zig").MAMA;
+pub const MAVP = @import("mavp.zig").MAVP;
