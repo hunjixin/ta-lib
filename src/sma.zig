@@ -48,9 +48,8 @@ test "SMA computes simple moving average correctly" {
     const result = try SMA(&prices, period, allocator);
     defer allocator.free(result);
 
-    try std.testing.expectApproxEqAbs(result[0], 0, 1e-9);
-    try std.testing.expectApproxEqAbs(result[1], 0, 1e-9);
-    try std.testing.expectApproxEqAbs(result[2], 2, 1e-9);
-    try std.testing.expectApproxEqAbs(result[3], 3, 1e-9);
-    try std.testing.expectApproxEqAbs(result[4], 4, 1e-9);
+    const expected = [_]f64{ 0, 0, 2, 3, 4 };
+    for (expected, 0..) |exp, i| {
+        try std.testing.expectApproxEqAbs(result[i], exp, 1e-9);
+    }
 }

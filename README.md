@@ -6,7 +6,7 @@ refrence： https://ta-lib.org/functions/
 ## Checklist
 
 - [x] BBands
-- [ ] Dema
+- [x] Dema
 - [x] Ema
 - [ ] HtTrendline
 - [ ] Kama
