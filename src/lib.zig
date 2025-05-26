@@ -23,3 +23,4 @@ pub const VAR = @import("var.zig").VAR;
 pub const StdDev = @import("stddev.zig").StdDev;
 pub const Bbands = @import("stddev.zig").Bbands;
 pub const DEMA = @import("dema.zig").DEMA;
+pub const HtTrendLine = @import("httrendline.zig").HtTrendLine;

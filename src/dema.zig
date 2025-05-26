@@ -27,8 +27,6 @@ pub fn DEMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![
 
     const secondEMA = try EMA(firstEMA[period - 1 ..], period, allocator);
     defer allocator.free(secondEMA);
-    std.debug.print("firstEMA {any}", .{firstEMA});
-    std.debug.print("secondEMA {any}", .{secondEMA});
 
     for (2 * period - 2..prices.len) |i| {
         out[i] = 2 * firstEMA[i] - secondEMA[i + 1 - period];
@@ -58,7 +56,6 @@ test "DEMA computes correctly" {
         9,
         10,
     };
-    std.debug.print("dema {any}", .{result});
     for (expected, 0..) |exp, i| {
         try std.testing.expectApproxEqAbs(result[i], exp, 1e-9);
     }

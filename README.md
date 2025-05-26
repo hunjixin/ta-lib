@@ -8,7 +8,7 @@ refrence： https://ta-lib.org/functions/
 - [x] BBands
 - [x] Dema
 - [x] Ema
-- [ ] HtTrendline
+- [x] HtTrendline
 - [ ] Kama
 - [ ] Mama
 - [ ] MaVp
