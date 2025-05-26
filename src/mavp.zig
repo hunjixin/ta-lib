@@ -2,6 +2,31 @@ const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 const SMA = @import("./lib.zig").SMA;
 
+/// Calculates the Moving Average with Variable Period (MAVP) for a given price series.
+///
+/// The MAVP is a moving average where the period can change at each data point,
+/// allowing for dynamic smoothing based on market conditions or other criteria.
+/// The formula for MAVP at index `i` is:
+/// ```
+/// MAVP[i] = sum(prices[i - period/2 .. i + period/2]) / period
+/// ```
+/// where `period` is clamped between `inMinPeriod` and `inMaxPeriod` and is taken from `inPeriods[i]`.
+///
+/// Parameters:
+/// - `prices`: Array of input price values (e.g., closing prices).
+/// - `inPeriods`: Array specifying the moving average period for each price point.
+/// - `inMinPeriod`: Minimum allowed period for the moving average.
+/// - `inMaxPeriod`: Maximum allowed period for the moving average.
+/// - `allocator`: Memory allocator for the result array.
+///
+/// Returns:
+/// - Allocated array of MAVP values corresponding to each input price.
+///
+/// Errors:
+/// - Returns an error if memory allocation fails or if input arrays have mismatched lengths.
+///
+/// Reference:
+/// - [TA-Lib MAVP Documentation](https://ta-lib.org/function.html)
 pub fn MAVP(prices: []const f64, inPeriods: []const usize, inMinPeriod: usize, inMaxPeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     if (prices.len != inPeriods.len) {
         return MyError.RowColumnMismatch;

@@ -12,7 +12,7 @@ refrence： https://ta-lib.org/functions/
 - [x] Kama
 - [x] Mama
 - [x] MaVp
-- [ ] MidPoint
+- [x] MidPoint
 - [ ] MidPrice
 - [ ] Sar
 - [ ] SarExt
