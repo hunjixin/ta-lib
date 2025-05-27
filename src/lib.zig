@@ -42,3 +42,5 @@ pub const MA = @import("ma.zig").MA;
 pub const APO = @import("apo.zig").APO;
 pub const Aroon = @import("aroon.zig").Aroon;
 pub const AroonOSC = @import("aroonosc.zig").AroonOSC;
+pub const Bop = @import("bop.zig").Bop;
+pub const Cmo = @import("cmo.zig").Cmo;

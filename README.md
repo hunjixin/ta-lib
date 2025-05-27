@@ -26,8 +26,8 @@ refrence： https://ta-lib.org/functions/
 - [x] Apo
 - [x] Aroon
 - [x] AroonOsc
-- [ ] Bop
-- [ ] Cmo
+- [x] Bop
+- [x] Cmo
 - [x] Cci
 - [ ] Dx
 - [x] Macd
