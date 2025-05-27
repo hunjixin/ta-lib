@@ -14,11 +14,11 @@ refrence： https://ta-lib.org/functions/
 - [x] MaVp
 - [x] MidPoint
 - [x] MidPrice
-- [ ] Sar
+- [x] Sar
 - [ ] SarExt
 - [x] Sma
-- [ ] T3
-- [ ] Tema
+- [x] T3
+- [x] Tema
 - [ ] Trima
 - [ ] Wma
 - [x] Adx
@@ -34,11 +34,11 @@ refrence： https://ta-lib.org/functions/
 - [ ] MacdExt
 - [ ] MacdFix
 - [x] MinusDI
-- [ ] MinusDM
+- [x] MinusDM
 - [ ] Mfi
 - [x] Mom
 - [x] PlusDI
-- [ ] PlusDM
+- [x] PlusDM
 - [ ] Ppo
 - [ ] Rocp
 - [ ] Roc
