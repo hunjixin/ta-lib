@@ -50,6 +50,6 @@ test "SMA computes simple moving average correctly" {
 
     const expected = [_]f64{ 0, 0, 2, 3, 4 };
     for (expected, 0..) |exp, i| {
-        try std.testing.expectApproxEqAbs(result[i], exp, 1e-9);
+        try std.testing.expectApproxEqAbs(exp, result[i], 1e-9);
     }
 }

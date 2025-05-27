@@ -40,4 +40,5 @@ pub const WMA = @import("wma.zig").WMA;
 pub const ADXR = @import("adxr.zig").ADXR;
 pub const MA = @import("ma.zig").MA;
 pub const APO = @import("apo.zig").APO;
-pub const Aroon = @import("aaron.zig").Aroon;
+pub const Aroon = @import("aroon.zig").Aroon;
+pub const AroonOSC = @import("aroonosc.zig").AroonOSC;

@@ -57,6 +57,6 @@ test "DEMA computes correctly" {
         10,
     };
     for (expected, 0..) |exp, i| {
-        try std.testing.expectApproxEqAbs(result[i], exp, 1e-9);
+        try std.testing.expectApproxEqAbs(exp, result[i], 1e-9);
     }
 }

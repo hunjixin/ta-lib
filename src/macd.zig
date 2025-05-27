@@ -131,8 +131,8 @@ test "MACD calculation with expected values" {
     };
 
     for (0..35) |i| {
-        try std.testing.expectApproxEqAbs(macd[i], expected_macd[i], 1e-9);
-        try std.testing.expectApproxEqAbs(histogram[i], expected_histogram[i], 1e-9);
-        try std.testing.expectApproxEqAbs(signal[i], expected_signal[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected_macd[i], macd[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected_histogram[i], histogram[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected_signal[i], signal[i], 1e-9);
     }
 }

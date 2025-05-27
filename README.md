@@ -25,7 +25,7 @@ refrence： https://ta-lib.org/functions/
 - [x] AdxR
 - [x] Apo
 - [x] Aroon
-- [ ] AroonOsc
+- [x] AroonOsc
 - [ ] Bop
 - [ ] Cmo
 - [x] Cci

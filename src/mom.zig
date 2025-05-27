@@ -23,6 +23,6 @@ test "MOM work correctly" {
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 4, 1, 4, 1, 87, 3, 3, 3, 3, -81 };
     for (result, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }

@@ -50,6 +50,6 @@ test "WillR " {
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, -20, -20, -20, -33.333333333333336, 0, -95.45454545454545, -96.55172413793103, -95.40229885057471, -96.51162790697674, -25 };
     for (adx, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }

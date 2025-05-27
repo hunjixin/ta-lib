@@ -64,9 +64,9 @@ test "StochF calculation works with bigger dataset" {
     };
 
     for (result[0], expect_fastk) |actual, expect| {
-        try std.testing.expectApproxEqAbs(actual, expect, 1e-8);
+        try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
     }
     for (result[1], expect_fastd) |actual, expect| {
-        try std.testing.expectApproxEqAbs(actual, expect, 1e-8);
+        try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
     }
 }

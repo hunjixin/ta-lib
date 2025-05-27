@@ -93,7 +93,7 @@ test "MinusDI " {
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67.18804335365883, 65.88605652362618, 65.0976325715738, 63.20672799658612 };
     for (adx, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }
 
@@ -118,6 +118,6 @@ test "MinusDI 1 perid " {
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 0, 0, 0 };
     for (adx, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }

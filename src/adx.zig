@@ -194,6 +194,6 @@ test "ADX handles trend reversals and choppy data" {
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 83.9503740135489, 70.6961927443363, 60.09284772896624, 50.99050951446177 };
     for (adx, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }

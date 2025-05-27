@@ -93,6 +93,6 @@ test "RSI: basic functionality with known values" {
 
     const expected = [_]f64{ 0, 0, 0, 100, 100, 100, 100, 100, 100, 100, 72.52167357708255, 45.9858027199503, 28.25962428212623, 20.75809109716329, 14.84655250742954, 8.818977761760397, 5.753268615914092, 4.191948739046798, 2.979205310967679, 2.077614910366095 };
     for (result, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-9);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }
 }

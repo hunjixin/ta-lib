@@ -133,14 +133,14 @@ test "Stoch calculation works with bigger dataset" {
             if (@abs(actual - expect) > 1e-8) {
                 std.debug.print("Mismatch at fastk index {}: actual={}, expect={}\n", .{ idx, actual, expect });
             }
-            try std.testing.expectApproxEqAbs(actual, expect, 1e-8);
+            try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
         }
 
         for (result[1], expect_fastd, 0..) |actual, expect, idx| {
             if (@abs(actual - expect) > 1e-8) {
                 std.debug.print("Mismatch at fastd index {}: actual={}, expect={}\n", .{ idx, actual, expect });
             }
-            try std.testing.expectApproxEqAbs(actual, expect, 1e-8);
+            try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
         }
     }
 
@@ -162,14 +162,14 @@ test "Stoch calculation works with bigger dataset" {
             if (@abs(actual - expect) > 1e-8) {
                 std.debug.print("Mismatch at fastk index {}: actual={}, expect={}\n", .{ idx, actual, expect });
             }
-            try std.testing.expectApproxEqAbs(actual, expect, 1e-8);
+            try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
         }
 
         for (result[1], expect_fastd, 0..) |actual, expect, idx| {
             if (@abs(actual - expect) > 1e-8) {
                 std.debug.print("Mismatch at fastd index {}: actual={}, expect={}\n", .{ idx, actual, expect });
             }
-            try std.testing.expectApproxEqAbs(actual, expect, 1e-8);
+            try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
         }
     }
 }
