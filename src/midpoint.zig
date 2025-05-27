@@ -1,11 +1,10 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 
-
 /// Calculates the midpoint value over a specified period for a given array of prices.
-/// 
+///
 /// The midpoint is computed as the average of the highest and lowest values within each moving window of the specified period.
-/// 
+///
 /// Formula:
 ///     MidPoint = (HighestHigh(period) + LowestLow(period)) / 2
 ///
@@ -23,7 +22,7 @@ pub fn MidPoint(prices: []const f64, period: usize, allocator: std.mem.Allocator
     for (loopback..prices.len) |i| {
         var min: f64 = prices[i + 1 - period];
         var max: f64 = prices[i + 1 - period];
-        for(i + 2 - period..i+1)|j|{
+        for (i + 2 - period..i + 1) |j| {
             min = @min(min, prices[j]);
             max = @max(max, prices[j]);
         }
@@ -42,7 +41,7 @@ test "MidPoint calculation with valid input" {
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, prices.len);
-    const expect = [_]f64{ 0,0,0,2.5,3.5,4.5,5.5,6.5,7.5,8.5 };
+    const expect = [_]f64{ 0, 0, 0, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5 };
     for (expect, 0..) |v, i| {
         try std.testing.expectApproxEqAbs(v, result[i], 1e-9);
     }

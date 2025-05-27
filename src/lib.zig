@@ -34,3 +34,4 @@ pub const SAR = @import("sar.zig").SAR;
 pub const PlusDM = @import("plusdm.zig").PlusDM;
 pub const T3 = @import("t3.zig").T3;
 pub const TEMA = @import("t3.zig").TEMA;
+pub const Trima = @import("trima.zig").Trima;

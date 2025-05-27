@@ -19,14 +19,14 @@ pub fn MidPrice(df: *const DataFrame(f64), period: usize, allocator: std.mem.All
     const inHigh = try df.getColumnData("high");
     const inLow = try df.getColumnData("low");
     const len = df.getRowCount();
-    var out = try allocator.alloc(f64,len );
+    var out = try allocator.alloc(f64, len);
     @memset(out, 0);
     const loopback = period - 1;
 
     for (loopback..len) |i| {
         var min: f64 = inLow[i + 1 - period];
         var max: f64 = inHigh[i + 1 - period];
-        for(i + 2 - period..i+1)|j|{
+        for (i + 2 - period..i + 1) |j| {
             min = @min(min, inLow[j]);
             max = @max(max, inHigh[j]);
         }
@@ -53,7 +53,23 @@ test "MidPrice calculation with valid input" {
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, highs.len);
-    const expect = [_]f64{0.000000,0.000000,0.000000,10.500000,11.000000,11.500000,12.000000,13.500000,13.500000,56.000000,56.500000,56.500000,57.000000,16.500000,17.000000, };
+    const expect = [_]f64{
+        0.000000,
+        0.000000,
+        0.000000,
+        10.500000,
+        11.000000,
+        11.500000,
+        12.000000,
+        13.500000,
+        13.500000,
+        56.000000,
+        56.500000,
+        56.500000,
+        57.000000,
+        16.500000,
+        17.000000,
+    };
     for (expect, 0..) |v, i| {
         try std.testing.expectApproxEqAbs(v, result[i], 1e-9);
     }

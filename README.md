@@ -19,7 +19,7 @@ refrence： https://ta-lib.org/functions/
 - [x] Sma
 - [x] T3
 - [x] Tema
-- [ ] Trima
+- [x] Trima
 - [ ] Wma
 - [x] Adx
 - [ ] AdxR
