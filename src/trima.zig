@@ -1,6 +1,30 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 
+/// Calculates the Triangular Moving Average (TRIMA) for a given array of prices.
+///
+/// The Triangular Moving Average is a double-smoothed simple moving average,
+/// which gives more weight to the middle portion of the data. The formula for TRIMA is:
+///
+///     TRIMA = SMA(SMA(prices, period), period)
+///
+/// Where `SMA` is the Simple Moving Average over the specified period.
+///
+/// Parameters:
+/// - `prices`: The input slice of price data (e.g., closing prices).
+/// - `period`: The number of periods to use for the moving average calculation.
+/// - `allocator`: The allocator to use for the result array.
+///
+/// Returns:
+/// - A newly allocated array of TRIMA values (length: prices.len - period + 1).
+///
+/// Errors:
+/// - Returns an error if memory allocation fails or if the period is invalid.
+///
+/// Example usage:
+/// ```zig
+/// const trima = try Trima(prices, 10, allocator);
+/// ```
 pub fn Trima(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;
     var out = try allocator.alloc(f64, len);
