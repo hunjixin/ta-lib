@@ -22,7 +22,7 @@ const MyError = @import("./lib.zig").MyError;
 ///
 /// Errors:
 ///   Returns an error if allocation fails or if the input is invalid.
-pub fn Wma(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn WMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;
     var out = try allocator.alloc(f64, len);
     @memset(out, 0);
@@ -71,7 +71,7 @@ test "Wma work correctly" {
         10.1, 12.8, 11.4, 75.9, 13.7, 14.2, 13.5, 15.9, 14.8, 43.3, 32.6, 16.2, 13.4, 17.5, 76.1,
     };
 
-    const result = try Wma(&prices, 5, allocator);
+    const result = try WMA(&prices, 5, allocator);
     defer allocator.free(result);
 
     const expected = [_]f64{

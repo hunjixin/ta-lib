@@ -22,9 +22,9 @@ refrence： https://ta-lib.org/functions/
 - [x] Trima
 - [x] Wma
 - [x] Adx
-- [ ] AdxR
-- [ ] Apo
-- [ ] Aroon
+- [x] AdxR
+- [x] Apo
+- [x] Aroon
 - [ ] AroonOsc
 - [ ] Bop
 - [ ] Cmo

@@ -1,6 +1,7 @@
 pub const DataFrame = @import("dataframe.zig").DataFrame;
 pub const Column = @import("dataframe.zig").Column;
 pub const MyError = @import("dataframe.zig").MyError;
+pub const MaType = @import("ma.zig").MaType;
 
 pub const AD = @import("ad.zig").AD;
 pub const OBV = @import("obv.zig").OBV;
@@ -35,4 +36,8 @@ pub const PlusDM = @import("plusdm.zig").PlusDM;
 pub const T3 = @import("t3.zig").T3;
 pub const TEMA = @import("tema.zig").TEMA;
 pub const Trima = @import("trima.zig").Trima;
-pub const Wma = @import("wma.zig").Wma;
+pub const WMA = @import("wma.zig").WMA;
+pub const ADXR = @import("adxr.zig").ADXR;
+pub const MA = @import("ma.zig").MA;
+pub const APO = @import("apo.zig").APO;
+pub const Aroon = @import("aaron.zig").Aroon;
