@@ -29,10 +29,10 @@ refrence： https://ta-lib.org/functions/
 - [x] Bop
 - [x] Cmo
 - [x] Cci
-- [ ] Dx
+- [x] Dx
 - [x] Macd
-- [ ] MacdExt
-- [ ] MacdFix
+- [x] MacdExt
+- [x] MacdFix
 - [x] MinusDI
 - [x] MinusDM
 - [ ] Mfi
@@ -41,14 +41,14 @@ refrence： https://ta-lib.org/functions/
 - [x] PlusDM
 - [ ] Ppo
 - [ ] Rocp
-- [ ] Roc
+- [x] Roc
 - [ ] Rocr
 - [ ] Rocr100
 - [x] Rsi
 - [x] Stoch
 - [x] StochF
 - [x] StochRsi
-- [ ] Trix
+- [x] Trix
 - [ ] UltOsc
 - [x] WillR
 - [x] Ad
