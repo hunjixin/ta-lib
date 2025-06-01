@@ -55,17 +55,17 @@ refrence： https://ta-lib.org/functions/
 - [x] AdOsc
 - [x] Obv
 - [x] Atr
-- [ ] Natr
+- [x] Natr
 - [x] TRange
 - [ ] AvgPrice
 - [ ] MedPrice
 - [ ] TypPrice
 - [ ] WclPrice
-- [ ] HtDcPeriod
-- [ ] HtDcPhase
-- [ ] HtPhasor
-- [ ] HtSine
-- [ ] HtTrendMode
+- [x] HtDcPeriod
+- [x] HtDcPhase
+- [x] HtPhasor
+- [x] HtSine
+- [x] HtTrendMode
 - [ ] Beta
 - [ ] Correl
 - [ ] LinearReg
