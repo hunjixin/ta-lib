@@ -35,28 +35,28 @@ refrence： https://ta-lib.org/functions/
 - [x] MacdFix
 - [x] MinusDI
 - [x] MinusDM
-- [ ] Mfi
+- [x] Mfi
 - [x] Mom
 - [x] PlusDI
 - [x] PlusDM
-- [ ] Ppo
-- [ ] Rocp
+- [x] Ppo
+- [x] Rocp
 - [x] Roc
-- [ ] Rocr
-- [ ] Rocr100
+- [x] Rocr
+- [x] Rocr100
 - [x] Rsi
 - [x] Stoch
 - [x] StochF
 - [x] StochRsi
 - [x] Trix
-- [ ] UltOsc
+- [x] UltOsc
 - [x] WillR
 - [x] Ad
 - [x] AdOsc
 - [x] Obv
-- [ ] Atr
+- [x] Atr
 - [ ] Natr
-- [ ] TRange
+- [x] TRange
 - [ ] AvgPrice
 - [ ] MedPrice
 - [ ] TypPrice
