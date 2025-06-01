@@ -66,11 +66,11 @@ refrence： https://ta-lib.org/functions/
 - [x] HtPhasor
 - [x] HtSine
 - [x] HtTrendMode
-- [ ] Beta
-- [ ] Correl
-- [ ] LinearReg
-- [ ] LinearRegAngle
-- [ ] LinearRegIntercept
+- [x] Beta
+- [x] Correl
+- [x] LinearReg
+- [x] LinearRegAngle
+- [x] LinearRegIntercept
 - [ ] LinearRegSlope
 - [x] StdDev
 - [ ] Tsf

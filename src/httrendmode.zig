@@ -1,6 +1,34 @@
 const std = @import("std");
 const math = std.math;
 
+/// Computes the Hilbert Transform Trend Mode indicator (HT_TRENDMODE) for a given input signal.
+///
+/// This indicator detects whether the input time series is currently in a trending or a cycling (mean-reverting) mode.
+///
+/// ## Theory:
+/// Based on the work of John Ehlers, the HT_TRENDMODE uses Hilbert Transform techniques to derive
+/// the dominant cycle and assess the phase difference between two sine waveforms:
+/// - The **Sine Wave**
+/// - The **Lead Sine Wave** (advanced by 45 degrees)
+///
+/// If the phase difference between the sine and lead sine remains consistent, it indicates a **cyclic (non-trending)** mode.
+/// If the phase relationship breaks down, it implies the presence of a **trend**.
+///
+/// ## Output:
+/// - Returns a list of `f64` values with the same length as `inReal`.
+/// - Each value is either:
+///   - `1.0` → indicating the market is in a **trending** mode.
+///   - `0.0` → indicating a **cycling** or sideways market.
+///
+/// ## Parameters:
+/// - `inReal`: Input time series (e.g., closing prices).
+/// - `allocator`: Zig allocator for memory allocation.
+///
+/// ## Returns:
+/// - A list of `f64` values indicating trend mode at each point.
+///
+/// ## Reference:
+/// - John Ehlers, *Rocket Science for Traders: Digital Signal Processing Applications*
 pub fn HtTrendMode(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
@@ -356,7 +384,7 @@ pub fn HtTrendMode(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     return outReal;
 }
 
-test "HtSine work correctly" {
+test "HtTrendMode work correctly" {
     var allocator = std.testing.allocator;
     const prices = [_]f64{
         100.00, 100.80, 101.60, 102.30, 103.10,
