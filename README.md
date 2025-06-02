@@ -1,9 +1,11 @@
 # ta-lib
 ta lib implementation in zig
 
+most of code is ported from go-implementation https://github.com/markcheno/go-talib
+
 refrence： https://ta-lib.org/functions/
 
-## Checklist
+## Progress
 
 - [x] BBands
 - [x] Dema
