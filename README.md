@@ -15,7 +15,7 @@ refrence： https://ta-lib.org/functions/
 - [x] MidPoint
 - [x] MidPrice
 - [x] Sar
-- [ ] SarExt
+- [x] SarExt
 - [x] Sma
 - [x] T3
 - [x] Tema
@@ -57,10 +57,10 @@ refrence： https://ta-lib.org/functions/
 - [x] Atr
 - [x] Natr
 - [x] TRange
-- [ ] AvgPrice
-- [ ] MedPrice
-- [ ] TypPrice
-- [ ] WclPrice
+- [x] AvgPrice
+- [x] MedPrice
+- [x] TypPrice
+- [x] WclPrice
 - [x] HtDcPeriod
 - [x] HtDcPhase
 - [x] HtPhasor
@@ -71,33 +71,33 @@ refrence： https://ta-lib.org/functions/
 - [x] LinearReg
 - [x] LinearRegAngle
 - [x] LinearRegIntercept
-- [ ] LinearRegSlope
+- [x] LinearRegSlope
 - [x] StdDev
-- [ ] Tsf
+- [x] Tsf
 - [x] Var
-- [ ] Acos
-- [ ] Asin
-- [ ] Atan
-- [ ] Ceil
-- [ ] Cos
-- [ ] Cosh
-- [ ] Exp
-- [ ] Floor
-- [ ] Ln
-- [ ] Log10
-- [ ] Sin
-- [ ] Sinh
-- [ ] Sqrt
-- [ ] Tan
-- [ ] Tanh
-- [ ] Add
-- [ ] Div
-- [ ] Max
-- [ ] MaxIndex
-- [ ] Min
-- [ ] MinIndex
-- [ ] MinMax
-- [ ] MinMaxIndex
-- [ ] Mult
-- [ ] Sub
-- [ ] Sum
+- [x] Acos
+- [x] Asin
+- [x] Atan
+- [x] Ceil
+- [x] Cos
+- [x] Cosh
+- [x] Exp
+- [x] Floor
+- [x] Ln
+- [x] Log10
+- [x] Sin
+- [x] Sinh
+- [x] Sqrt
+- [x] Tan
+- [x] Tanh
+- [x] Add
+- [x] Div
+- [x] Max
+- [x] MaxIndex
+- [x] Min
+- [x] MinIndex
+- [x] MinMax
+- [x] MinMaxIndex
+- [x] Mult
+- [x] Sub
+- [x] Sum 
