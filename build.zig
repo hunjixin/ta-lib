@@ -6,43 +6,67 @@ pub fn build(b: *std.Build) !void {
     const cwd = std.fs.cwd();
     var allocator = std.heap.page_allocator;
 
-    const rootModule = b.createModule(.{
+    //run unit test
+    var srcDir = cwd.openDir("src", .{ .iterate = true }) catch {
+        std.log.err("⚠️ cannot open 'src/'", .{});
+        return;
+    };
+    defer srcDir.close();
+
+    const runTests = b.step("test", "Run all unit tests");
+    var iter = srcDir.iterate();
+    while (try iter.next()) |entry| {
+        if (entry.kind != .file) continue;
+        if (!std.mem.endsWith(u8, entry.name, ".zig")) continue;
+
+        const pathBuf = try std.fs.path.join(allocator, &[_][]const u8{ "src", entry.name });
+        defer allocator.free(pathBuf);
+
+        const testModule = b.createModule(.{
+            .root_source_file = b.path(pathBuf),
+            .target = target,
+            .optimize = optimize,
+            .error_tracing = true,
+        });
+        const testCompiled = b.addTest(.{ .name = entry.name, .root_module = testModule });
+        const testRun = b.addRunArtifact(testCompiled);
+        runTests.dependOn(&testRun.step);
+    }
+
+    //lib module
+    const libModule = b.createModule(.{
         .root_source_file = b.path("src/lib.zig"),
         .target = target,
         .optimize = optimize,
         .error_tracing = true,
     });
-    const lib = b.addLibrary(.{
-        .name = "ta_lib",
-        .zig_lib_dir = b.path("src"),
-        .root_module = rootModule,
-    });
 
-    b.installArtifact(lib);
-
-    var src_dir = cwd.openDir("src", .{ .iterate = true }) catch {
-        std.log.err("⚠️ cannot open 'src/'", .{});
+    //run examples
+    var exampleDir = cwd.openDir("examples", .{ .iterate = true }) catch {
+        std.log.err("⚠️ cannot open 'examples/'", .{});
         return;
     };
-    defer src_dir.close();
-    const run_tests = b.step("test", "Run all unit tests");
+    defer exampleDir.close();
 
-    var iter = src_dir.iterate();
-    while (try iter.next()) |entry| {
+    const runExamples = b.step("examples", "Run all examples");
+    var exampleIter = exampleDir.iterate();
+    while (try exampleIter.next()) |entry| {
         if (entry.kind != .file) continue;
         if (!std.mem.endsWith(u8, entry.name, ".zig")) continue;
 
-        const path_buf = try std.fs.path.join(allocator, &[_][]const u8{ "src", entry.name });
-        defer allocator.free(path_buf);
+        const pathBuf = try std.fs.path.join(allocator, &[_][]const u8{ "examples", entry.name });
+        defer allocator.free(pathBuf);
 
-        const testModule = b.createModule(.{
-            .root_source_file = b.path(path_buf),
+        var exampleModule = b.createModule(.{
+            .root_source_file = b.path(pathBuf),
             .target = target,
             .optimize = optimize,
             .error_tracing = true,
         });
-        const test_compiled = b.addTest(.{ .name = entry.name, .root_module = testModule });
-        const test_run = b.addRunArtifact(test_compiled);
-        run_tests.dependOn(&test_run.step);
+
+        exampleModule.addImport("ta_lib", libModule);
+        const exampleCompiled = b.addExecutable(.{ .name = entry.name, .root_module = exampleModule });
+        const testRun = b.addRunArtifact(exampleCompiled);
+        runExamples.dependOn(&testRun.step);
     }
 }

@@ -51,7 +51,7 @@ pub fn DataFrame(comptime T: type) type {
 
         const Self = @This();
 
-        pub fn init(allocator: std.mem.Allocator) !Self {
+        pub fn init(allocator: std.mem.Allocator) Self {
             return Self{
                 .allocator = allocator,
                 .columns = std.ArrayList(Column(T)).init(allocator),
@@ -140,7 +140,7 @@ test "DataFrame basic functionality" {
     var allocator = std.testing.allocator;
     const DF = DataFrame(i32);
 
-    var df = try DF.init(allocator);
+    var df = DF.init(allocator);
     defer df.deinit();
 
     try df.addColumn("a");

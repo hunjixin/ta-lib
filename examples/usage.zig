@@ -1,7 +1,12 @@
 const std = @import("std");
-const lib = @import("../src/lib.zig");
+const DataFrame = @import("ta_lib").DataFrame;
 
-pub fn main() void {
-    const result = lib.add(10, 20);
-    std.debug.print("10 + 20 = {}\n", .{result});
+pub fn main() !void {
+    const allocator = std.heap.page_allocator;
+    var df = DataFrame(f64).init(allocator);
+    defer df.deinit();
+
+    try df.addColumnWithData("abc", &[_]f64{ 1, 2, 3 });
+    const rowCount = df.getRowCount();
+    std.debug.print("{any}\n", .{rowCount});
 }

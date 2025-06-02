@@ -158,9 +158,10 @@ test "Adx computes expected values for simple data" {
     const period = 5;
     const adx = try Adx(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
-    const expected = [_]f64{ 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 1e2, 1e2, 1e2, 1e2, 1e2, 1e2 };
+
+    const expected = [_]f64{ 0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 1e2, 1e2, 1e2, 1e2, 1e2, 1e2 };
     for (adx, 0..) |v, i| {
-        try std.testing.expectApproxEqAbs(v, expected[i], 1e-6);
+        try std.testing.expectApproxEqAbs(expected[i], v, 1e-6);
     }
 }
 
