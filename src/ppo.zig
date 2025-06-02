@@ -2,7 +2,7 @@ const std = @import("std");
 const EMA = @import("./lib.zig").EMA;
 const MyError = @import("./lib.zig").MyError;
 const MaType = @import("./lib.zig").MaType;
-const MA = @import("./lib.zig").MA;
+const Ma = @import("./lib.zig").Ma;
 const IsZero = @import("./utils.zig").IsZero;
 
 /// Calculates the Percentage Price Oscillator (PPO) for a given price series.
@@ -39,7 +39,7 @@ const IsZero = @import("./utils.zig").IsZero;
 ///
 /// Returns:
 /// - `![]f64`: A slice of `f64` values representing the PPO series, aligned to input length.
-///             Values before `inSlowPeriod` may be zero or uninitialized depending on the MA implementation.
+///             Values before `inSlowPeriod` may be zero or uninitialized depending on the Ma implementation.
 ///
 /// Errors:
 /// - Returns an allocator error if memory allocation fails.
@@ -58,9 +58,9 @@ pub fn Ppo(
         std.mem.swap(usize, &slowPeriod, &fastPeriod);
     }
 
-    const tempBuffer = try MA(prices, fastPeriod, maType, allocator);
+    const tempBuffer = try Ma(prices, fastPeriod, maType, allocator);
     defer allocator.free(tempBuffer);
-    var outReal = try MA(prices, slowPeriod, maType, allocator);
+    var outReal = try Ma(prices, slowPeriod, maType, allocator);
 
     for (slowPeriod - 1..prices.len) |i| {
         const tempReal = outReal[i];

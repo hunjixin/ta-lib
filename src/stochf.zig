@@ -1,5 +1,6 @@
 const std = @import("std");
-const SMA = @import("./lib.zig").SMA;
+const MaType = @import("./lib.zig").MaType;
+const Ma = @import("./lib.zig").Ma;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
 
@@ -25,8 +26,9 @@ const MyError = @import("./lib.zig").MyError;
 ///   - `low`: The low price of the asset.
 ///   - `close`: The closing price of the asset.
 ///   - `inFastKPeriod`: Look-back period for Fast %K calculation.
-///   - inFastKPeriod`: Number of periods for the FastK calculation
+///   - `inFastKPeriod`: Number of periods for the FastK calculation
 ///   - `inFastDPeriod`: Number of periods for the FastD (moving average) calculation
+///   - `inSlowDMAType`: num specifying the type of moving average to use (e.g., EMA, SMA)
 ///   - `allocator`: Allocator for memory management
 ///
 /// Returns:
@@ -42,6 +44,7 @@ pub fn StochF(
     close: []const f64,
     inFastKPeriod: usize,
     inFastDPeriod: usize,
+    inFastDMAType: MaType,
     allocator: std.mem.Allocator,
 ) !struct { []f64, []f64 } {
     const len = close.len;
@@ -79,7 +82,7 @@ pub fn StochF(
             0.0;
     }
 
-    const tempBuffer1 = try SMA(tempBuffer, inFastDPeriod, allocator);
+    const tempBuffer1 = try Ma(tempBuffer, inFastDPeriod, inFastDMAType, allocator);
     defer allocator.free(tempBuffer1);
     for (lookbackTotal..len) |j| {
         const i = j - lookbackTotal + 1;
@@ -104,7 +107,7 @@ test "StochF calculation works with bigger dataset" {
         27.7, 29.1, 30.5, 31.8, 33.2, 34.7, 36.0, 37.3, 38.7, 40.0,
     };
     // Use FastK period = 3, FastD period = 2
-    const result = try StochF(&highs, &lows, &closes, 3, 2, gpa);
+    const result = try StochF(&highs, &lows, &closes, 3, 2, MaType.SMA, gpa);
     defer gpa.free(result[0]);
     defer gpa.free(result[1]);
 

@@ -1,5 +1,6 @@
 const std = @import("std");
-const SMA = @import("./lib.zig").SMA;
+const MaType = @import("./lib.zig").MaType;
+const Ma = @import("./lib.zig").Ma;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
 
@@ -23,7 +24,9 @@ const MyError = @import("./lib.zig").MyError;
 ///   - `close`: The closing price of the asset.
 ///   - `inFastKPeriod`: Look-back period for Fast %K calculation.
 ///   - `inSlowKPeriod`: Smoothing period for Slow %K (usually 3).
+///   - `inSlowKMAType`: num specifying the type of moving average to use (e.g., EMA, SMA)
 ///   - `inSlowDPeriod`: Smoothing period for Slow %D (usually 3).
+///   - `inSlowDMAType`: num specifying the type of moving average to use (e.g., EMA, SMA)
 ///   - `allocator`: Memory allocator to use for result arrays.
 ///
 /// Returns:
@@ -39,7 +42,9 @@ pub fn Stoch(
     close: []const f64,
     inFastKPeriod: usize,
     inSlowKPeriod: usize,
+    inSlowKMAType: MaType,
     inSlowDPeriod: usize,
+    inSlowDMAType: MaType,
     allocator: std.mem.Allocator,
 ) !struct { []f64, []f64 } {
     const len = close.len;
@@ -78,8 +83,8 @@ pub fn Stoch(
             0.0;
     }
 
-    const tempBuffer1 = try SMA(tempBuffer, inSlowKPeriod, allocator);
-    const tempBuffer2 = try SMA(tempBuffer1, inSlowDPeriod, allocator);
+    const tempBuffer1 = try Ma(tempBuffer, inSlowKPeriod, inSlowKMAType, allocator);
+    const tempBuffer2 = try Ma(tempBuffer1, inSlowDPeriod, inSlowDMAType, allocator);
     defer allocator.free(tempBuffer1);
     defer allocator.free(tempBuffer2);
 
@@ -108,7 +113,7 @@ test "Stoch calculation works with bigger dataset" {
     };
 
     {
-        const result = try Stoch(&highs, &lows, &closes, 5, 3, 3, gpa);
+        const result = try Stoch(&highs, &lows, &closes, 5, 3, MaType.SMA, 3, MaType.SMA, gpa);
         defer gpa.free(result[0]);
         defer gpa.free(result[1]);
 
@@ -137,7 +142,7 @@ test "Stoch calculation works with bigger dataset" {
     }
 
     {
-        const result = try Stoch(&highs, &lows, &closes, 8, 3, 3, gpa);
+        const result = try Stoch(&highs, &lows, &closes, 8, 3, MaType.SMA, 3, MaType.SMA, gpa);
         defer gpa.free(result[0]);
         defer gpa.free(result[1]);
 

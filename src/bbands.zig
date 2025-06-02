@@ -1,6 +1,7 @@
 const std = @import("std");
 const StdDev = @import("./lib.zig").StdDev;
-const SMA = @import("./lib.zig").SMA;
+const MaType = @import("./lib.zig").MaType;
+const Ma = @import("./lib.zig").Ma;
 
 /// Calculates Bollinger Bands for a given price series.
 ///
@@ -19,6 +20,7 @@ const SMA = @import("./lib.zig").SMA;
 ///   inTimePeriod  - Number of periods for the moving average and standard deviation
 ///   inNbDevUp     - Number of standard deviations for the upper band
 ///   inNbDevDn     - Number of standard deviations for the lower band
+///   maType        - Enum specifying the type of moving average to use (e.g., EMA, SMA)
 ///   allocator     - Allocator for result arrays
 ///
 /// Returns:
@@ -32,9 +34,9 @@ const SMA = @import("./lib.zig").SMA;
 ///
 /// Example usage:
 ///   const result = try Bbands(prices, 20, 2.0, 2.0, allocator);
-pub fn Bbands(prices: []const f64, inTimePeriod: usize, inNbDevUp: f64, inNbDevDn: f64, allocator: std.mem.Allocator) !struct { []f64, []f64, []f64 } {
+pub fn Bbands(prices: []const f64, inTimePeriod: usize, inNbDevUp: f64, inNbDevDn: f64, maType: MaType, allocator: std.mem.Allocator) !struct { []f64, []f64, []f64 } {
     var upper_band = try allocator.alloc(f64, prices.len);
-    const middle_band = try SMA(prices, inTimePeriod, allocator);
+    const middle_band = try Ma(prices, inTimePeriod, maType, allocator);
     var lower_band = try allocator.alloc(f64, prices.len);
     const stddev = try StdDev(prices, inTimePeriod, 1.0, allocator);
     defer allocator.free(stddev);
@@ -78,7 +80,7 @@ test "Bbands work correctly" {
     const period = 5;
 
     {
-        const upper, const middle, const down = try Bbands(prices[0..], period, 1, 1, allocator);
+        const upper, const middle, const down = try Bbands(prices[0..], period, 1, 1, MaType.SMA, allocator);
         defer allocator.free(upper);
         defer allocator.free(middle);
         defer allocator.free(down);
@@ -105,7 +107,7 @@ test "Bbands work correctly" {
     }
 
     {
-        const upper, const middle, const down = try Bbands(prices[0..], period, 2, 3, allocator);
+        const upper, const middle, const down = try Bbands(prices[0..], period, 2, 3, MaType.SMA, allocator);
         defer allocator.free(upper);
         defer allocator.free(middle);
         defer allocator.free(down);

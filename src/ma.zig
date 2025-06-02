@@ -22,7 +22,7 @@ pub const MaType = enum {
     T3MA, // T3 Moving Average
 };
 
-pub fn MA(
+pub fn Ma(
     inReal: []const f64,
     inTimePeriod: usize,
     inMatype: MaType,

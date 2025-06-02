@@ -1,7 +1,8 @@
 const std = @import("std");
 const StochF = @import("./lib.zig").StochF;
 const RSI = @import("./lib.zig").RSI;
-const SMA = @import("./lib.zig").SMA;
+const MaType = @import("./lib.zig").MaType;
+const Ma = @import("./lib.zig").Ma;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
 
@@ -10,6 +11,7 @@ pub fn StochRsi(
     inTimePeriod: usize,
     inFastKPeriod: usize,
     inFastDPeriod: usize,
+    inFastDMAType: MaType,
     allocator: std.mem.Allocator,
 ) !struct { []f64, []f64 } {
     const len = inReal.len;
@@ -19,7 +21,7 @@ pub fn StochRsi(
     const tempRSIBuffer = try RSI(inReal, inTimePeriod, allocator);
     defer allocator.free(tempRSIBuffer);
 
-    const tempk, const tempd = try StochF(tempRSIBuffer, tempRSIBuffer, tempRSIBuffer, inFastKPeriod, inFastDPeriod, allocator);
+    const tempk, const tempd = try StochF(tempRSIBuffer, tempRSIBuffer, tempRSIBuffer, inFastKPeriod, inFastDPeriod, inFastDMAType, allocator);
     defer allocator.free(tempd);
     defer allocator.free(tempk);
 
@@ -41,7 +43,7 @@ test "StochF calculation works with bigger dataset" {
     const high_data = [_]f64{ 10.0, 25.0, 5.0, 40.0, 60.0, 15.0, 80.0, 100.0, 55.0, 120.0, 90.0, 150.0, 30.0, 200.0, 170.0, 250.0, 60.0, 300.0, 20.0, 350.0 };
 
     // Use FastK period = 3, FastD period = 2
-    const result = try StochRsi(&high_data, 5, 3, 2, gpa);
+    const result = try StochRsi(&high_data, 5, 3, 2, MaType.SMA, gpa);
     defer gpa.free(result[0]);
     defer gpa.free(result[1]);
 

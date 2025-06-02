@@ -1,5 +1,5 @@
 const std = @import("std");
-const MA = @import("./lib.zig").MA;
+const Ma = @import("./lib.zig").Ma;
 const MaType = @import("./lib.zig").MaType;
 
 /// Calculates the Absolute Price Oscillator (APO) for a given price series.
@@ -32,10 +32,10 @@ pub fn APO(prices: []const f64, inFastPeriod: usize, inSlowPeriod: usize, inMATy
     if (slowPeriod < fastPeriod) {
         std.mem.swap(usize, &slowPeriod, &fastPeriod);
     }
-    const tempBuffer = try MA(prices, fastPeriod, inMAType, allocator);
+    const tempBuffer = try Ma(prices, fastPeriod, inMAType, allocator);
     defer allocator.free(tempBuffer);
 
-    const outReal = try MA(prices, slowPeriod, inMAType, allocator);
+    const outReal = try Ma(prices, slowPeriod, inMAType, allocator);
     for (slowPeriod - 1..prices.len) |i| {
         outReal[i] = tempBuffer[i] - outReal[i];
     }
