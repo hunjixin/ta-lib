@@ -12,7 +12,7 @@ const math = std.math;
 /// ## Theory and formulas:
 ///
 /// The Hilbert Transform is used to generate a 90-degree phase-shifted version of the input signal.
-/// Using weighted moving averages (WMA) and smoothing, the function calculates the components:
+/// Using weighted moving averages (Wma) and smoothing, the function calculates the components:
 ///
 /// - Detrender: a bandpass filter approximating the Hilbert Transform of the signal.
 /// - I (In-Phase): represents the original signal component.

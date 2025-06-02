@@ -1,26 +1,26 @@
 const std = @import("std");
 const math = std.math;
 
-/// Computes the Parabolic SAR (Stop and Reverse) with extended parameter control.
+/// Computes the Parabolic Sar (Stop and Reverse) with extended parameter control.
 ///
-/// The Parabolic SAR is a trend-following indicator developed by Welles Wilder. It helps to identify potential trend reversals in the price of an asset.
+/// The Parabolic Sar is a trend-following indicator developed by Welles Wilder. It helps to identify potential trend reversals in the price of an asset.
 /// This extended version allows fine-grained control of acceleration parameters for both long and short positions.
 ///
 /// ---
 /// **Concept:**
-/// The SAR is calculated using the formula:
+/// The Sar is calculated using the formula:
 /// ```text
-/// SAR(n) = SAR(n-1) + AF * (EP - SAR(n-1))
+/// Sar(n) = Sar(n-1) + AF * (EP - Sar(n-1))
 /// ```
-/// - `SAR(n-1)`: Previous SAR value
+/// - `Sar(n-1)`: Previous Sar value
 /// - `AF`: Acceleration Factor (starts from init, incremented by factor, capped at max)
 /// - `EP`: Extreme Point (highest high in long position, lowest low in short position)
 ///
-/// Reversals occur when the price crosses the SAR, and the direction of the SAR switches.
+/// Reversals occur when the price crosses the Sar, and the direction of the Sar switches.
 ///
 /// ---
 /// **Extended Parameters:**
-/// - `inStartValue`: Initial SAR value.
+/// - `inStartValue`: Initial Sar value.
 /// - `inOffsetOnReverse`: Offset added when a reversal occurs.
 /// - `inAccelerationInitLong`: Initial acceleration for long positions.
 /// - `inAccelerationLongF`: Acceleration increment per period for long positions.
@@ -37,7 +37,7 @@ const math = std.math;
 ///
 /// ---
 /// **Returns:**
-/// - Slice of `f64` containing the computed SAR values. The output has the same length as the input.
+/// - Slice of `f64` containing the computed Sar values. The output has the same length as the input.
 ///
 /// ---
 /// **Errors:**
@@ -100,7 +100,7 @@ fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOn
     var ep: f64 = 0.0; // Extreme point
     var sar: f64 = 0.0; // Stop and reverse value
 
-    // Initialize SAR and extreme point
+    // Initialize Sar and extreme point
     if (inStartValue == 0.0) {
         if (isLong == 1) {
             ep = inHigh[todayIdx];
@@ -153,7 +153,7 @@ fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOn
                 ep = newLow;
                 sar += afShort * (ep - sar);
 
-                // Clamp SAR to recent highs
+                // Clamp Sar to recent highs
                 if (sar < prevHigh) sar = prevHigh;
                 if (sar < newHigh) sar = newHigh;
             } else {
@@ -170,10 +170,10 @@ fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOn
                     }
                 }
 
-                // Update SAR
+                // Update Sar
                 sar += afLong * (ep - sar);
 
-                // Clamp SAR to recent lows
+                // Clamp Sar to recent lows
                 if (sar > prevLow) sar = prevLow;
                 if (sar > newLow) sar = newLow;
             }
@@ -199,7 +199,7 @@ fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOn
                 ep = newHigh;
                 sar += afLong * (ep - sar);
 
-                // Clamp SAR to recent lows
+                // Clamp Sar to recent lows
                 if (sar > prevLow) sar = prevLow;
                 if (sar > newLow) sar = newLow;
             } else {
@@ -216,10 +216,10 @@ fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOn
                     }
                 }
 
-                // Update SAR
+                // Update Sar
                 sar += afShort * (ep - sar);
 
-                // Clamp SAR to recent highs
+                // Clamp Sar to recent highs
                 if (sar < prevHigh) sar = prevHigh;
                 if (sar < newHigh) sar = newHigh;
             }

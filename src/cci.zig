@@ -1,15 +1,14 @@
 const std = @import("std");
-const SMA = @import("./lib.zig").SMA;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
 
-/// Calculates the Commodity Channel Index (CCI) for the given data frame.
+/// Calculates the Commodity Channel Index (Cci) for the given data frame.
 ///
-/// The Commodity Channel Index (CCI) is a momentum-based oscillator used to identify cyclical trends in a financial market.
+/// The Commodity Channel Index (Cci) is a momentum-based oscillator used to identify cyclical trends in a financial market.
 /// It measures the variation of a security's price from its statistical mean. High positive values indicate that prices are well above their average, which may signal an overbought condition; low negative values indicate an oversold condition.
 ///
-/// The CCI is calculated using the following formula:
-///   CCI = (Typical Price - SMA) / (0.015 * Mean Deviation)
+/// The Cci is calculated using the following formula:
+///   Cci = (Typical Price - SMA) / (0.015 * Mean Deviation)
 /// where:
 ///   - Typical Price = (High + Low + Close) / 3
 ///   - SMA = Simple Moving Average of Typical Price over the specified period
@@ -19,20 +18,20 @@ const MyError = @import("./lib.zig").MyError;
 ///   - `high`: The high price of the asset.
 ///   - `low`: The low price of the asset.
 ///   - `close`: The closing price of the asset.
-///   - `inTimePeriod`: The period over which to calculate the CCI (e.g., 14).
+///   - `inTimePeriod`: The period over which to calculate the Cci (e.g., 14).
 ///   - `allocator`: Memory allocator to use for the result array.
 ///
 /// Returns:
-///   - An array of f64 values representing the CCI for each row.
+///   - An array of f64 values representing the Cci for each row.
 ///
 /// Errors:
 ///   - Returns an error if memory allocation fails or if input data is insufficient.
 ///
 /// Example usage:
 /// ```zig
-/// const cci_values = try CCI(&data_frame, 14, allocator);
+/// const cci_values = try Cci(&data_frame, 14, allocator);
 /// ```
-pub fn CCI(
+pub fn Cci(
     inHigh: []const f64,
     inLow: []const f64,
     inClose: []const f64,
@@ -81,7 +80,7 @@ pub fn CCI(
     return out;
 }
 
-test "CCI work correctly" {
+test "Cci work correctly" {
     var allocator = std.testing.allocator;
 
     // Trend reversals and choppy data: up, down, up, down, flat, up, down, up, down, up
@@ -89,7 +88,7 @@ test "CCI work correctly" {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    const adx = try CCI(&highs, &lows, &closes, 5, allocator);
+    const adx = try Cci(&highs, &lows, &closes, 5, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 113.82113821138218, 92.10526315789485, 47.61904761904769, 142.85714285714295, 61.40350877192985, 166.6666666666667, 41.09303295786401, -51.64319248826292, -50.458715596330265, -54.80984340044743, -32.828282828282845 };
@@ -98,7 +97,7 @@ test "CCI work correctly" {
     }
 }
 
-test "CCI handles with 1 period" {
+test "Cci handles with 1 period" {
     var allocator = std.testing.allocator;
 
     // Trend reversals and choppy data: up, down, up, down, flat, up, down, up, down, up
@@ -106,7 +105,7 @@ test "CCI handles with 1 period" {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    const adx = try CCI(&highs, &lows, &closes, 1, allocator);
+    const adx = try Cci(&highs, &lows, &closes, 1, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

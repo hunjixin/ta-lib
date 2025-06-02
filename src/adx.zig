@@ -1,10 +1,10 @@
 const std = @import("std");
 
-/// Calculate the Average Directional Index (ADX) for a given DataFrame.
+/// Calculate the Average Directional Index (Adx) for a given DataFrame.
 ///
-/// The ADX is a technical analysis indicator used to quantify trend strength.
+/// The Adx is a technical analysis indicator used to quantify trend strength.
 /// It is based on the Directional Movement Index (DMI), which consists of +DI and -DI.
-/// The ADX is the smoothed moving average of the DX (Directional Movement Index).
+/// The Adx is the smoothed moving average of the DX (Directional Movement Index).
 ///
 /// Formula references:
 /// - True Range (TR):
@@ -19,7 +19,7 @@ const std = @import("std");
 /// - +DI = 100 * (smoothed +DM / smoothed TR)
 /// - -DI = 100 * (smoothed -DM / smoothed TR)
 /// - DX = 100 * abs(+DI - -DI) / (+DI + -DI)
-/// - ADX = (previous_ADX * (period - 1) + current_DX) / period
+/// - Adx = (previous_ADX * (period - 1) + current_DX) / period
 ///
 /// Parameters:
 /// - `high`: The high price of the asset.
@@ -29,8 +29,8 @@ const std = @import("std");
 /// - allocator: memory allocator
 ///
 /// Returns:
-/// - Array of ADX values (length equals input data)
-pub fn ADX(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+/// - Array of Adx values (length equals input data)
+pub fn Adx(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const n = inHigh.len;
     var out = try allocator.alloc(f64, n);
     errdefer allocator.free(out);
@@ -147,7 +147,7 @@ pub fn ADX(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period
     return out;
 }
 
-test "ADX computes expected values for simple data" {
+test "Adx computes expected values for simple data" {
     var allocator = std.testing.allocator;
 
     // Prepare simple test data
@@ -156,7 +156,7 @@ test "ADX computes expected values for simple data" {
     const closes = [_]f64{ 29, 31, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 };
 
     const period = 5;
-    const adx = try ADX(&highs, &lows, &closes, period, allocator);
+    const adx = try Adx(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
     const expected = [_]f64{ 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 1e2, 1e2, 1e2, 1e2, 1e2, 1e2 };
     for (adx, 0..) |v, i| {
@@ -164,7 +164,7 @@ test "ADX computes expected values for simple data" {
     }
 }
 
-test "ADX handles trend reversals and choppy data" {
+test "Adx handles trend reversals and choppy data" {
     var allocator = std.testing.allocator;
 
     // Trend reversals and choppy data: up, down, up, down, flat, up, down, up, down, up
@@ -173,7 +173,7 @@ test "ADX handles trend reversals and choppy data" {
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
     const period = 5;
-    const adx = try ADX(&highs, &lows, &closes, period, allocator);
+    const adx = try Adx(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 83.9503740135489, 70.6961927443363, 60.09284772896624, 50.99050951446177 };

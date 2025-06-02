@@ -6,9 +6,9 @@ const MyError = @import("./lib.zig").MyError;
 /// The Triangular Moving Average is a double-smoothed simple moving average,
 /// which gives more weight to the middle portion of the data. The formula for TRIMA is:
 ///
-///     TRIMA = SMA(SMA(prices, period), period)
+///     TRIMA = Sma(Sma(prices, period), period)
 ///
-/// Where `SMA` is the Simple Moving Average over the specified period.
+/// Where `Sma` is the Simple Moving Average over the specified period.
 ///
 /// Parameters:
 /// - `prices`: The input slice of price data (e.g., closing prices).

@@ -1,13 +1,13 @@
 const std = @import("std");
-const EMA = @import("./lib.zig").EMA;
+const Ema = @import("./lib.zig").Ema;
 const Roc = @import("./lib.zig").Roc;
 
 pub fn Trix(prices: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
-    const tmpReal = try EMA(prices, inTimePeriod, allocator);
+    const tmpReal = try Ema(prices, inTimePeriod, allocator);
     defer allocator.free(tmpReal);
-    const tmpReal2 = try EMA(tmpReal[inTimePeriod - 1 ..], inTimePeriod, allocator);
+    const tmpReal2 = try Ema(tmpReal[inTimePeriod - 1 ..], inTimePeriod, allocator);
     defer allocator.free(tmpReal2);
-    const tmpReal3 = try EMA(tmpReal2[inTimePeriod - 1 ..], inTimePeriod, allocator);
+    const tmpReal3 = try Ema(tmpReal2[inTimePeriod - 1 ..], inTimePeriod, allocator);
     defer allocator.free(tmpReal3);
     const tmpReal4 = try Roc(tmpReal3, 1, allocator);
     defer allocator.free(tmpReal4);

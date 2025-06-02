@@ -1,39 +1,39 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
-const EMA = @import("./lib.zig").EMA;
+const Ema = @import("./lib.zig").Ema;
 
-/// Calculates the Triple Exponential Moving Average (TEMA) for a given array of prices.
+/// Calculates the Triple Exponential Moving Average (Tema) for a given array of prices.
 ///
-/// TEMA is a technical analysis indicator that smooths price data by applying the exponential moving average (EMA) three times.
-/// The formula for TEMA is:
-///     TEMA = 3 * EMA1 - 3 * EMA2 + EMA3
+/// Tema is a technical analysis indicator that smooths price data by applying the exponential moving average (Ema) three times.
+/// The formula for Tema is:
+///     Tema = 3 * EMA1 - 3 * EMA2 + EMA3
 /// where:
-///     EMA1 = EMA(prices, period)
-///     EMA2 = EMA(EMA1, period)
-///     EMA3 = EMA(EMA2, period)
+///     EMA1 = Ema(prices, period)
+///     EMA2 = Ema(EMA1, period)
+///     EMA3 = Ema(EMA2, period)
 ///
 /// Parameters:
 /// - prices: Array of input price values (e.g., closing prices).
-/// - period: The number of periods to use for the EMA calculations.
+/// - period: The number of periods to use for the Ema calculations.
 /// - allocator: Memory allocator for the result array.
 ///
 /// Returns:
-/// - An array of TEMA values corresponding to the input prices.
+/// - An array of Tema values corresponding to the input prices.
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if the input parameters are invalid.
-pub fn TEMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn Tema(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     if (period == 0 or prices.len < period * 3 - 2) {
         return error.MyError;
     }
 
-    const firstEMA = try EMA(prices, period, allocator);
+    const firstEMA = try Ema(prices, period, allocator);
     defer allocator.free(firstEMA);
 
-    const secondEMA = try EMA(firstEMA[(period - 1)..], period, allocator);
+    const secondEMA = try Ema(firstEMA[(period - 1)..], period, allocator);
     defer allocator.free(secondEMA);
 
-    const thirdEMA = try EMA(secondEMA[(period - 1)..], period, allocator);
+    const thirdEMA = try Ema(secondEMA[(period - 1)..], period, allocator);
     defer allocator.free(thirdEMA);
 
     const out_len = prices.len;
@@ -54,14 +54,14 @@ pub fn TEMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![
     return outReal;
 }
 
-test "TEMA calculation with valid input" {
+test "Tema calculation with valid input" {
     const allocator = std.testing.allocator;
     const prices = [_]f64{
         10,  12,  11,  13,  13,  14,  13,  15,  14,  100,  17, 16, 18, 17, 19,
         1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0,
     };
 
-    const result = try TEMA(prices[0..], 4, allocator);
+    const result = try Tema(prices[0..], 4, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, prices.len);

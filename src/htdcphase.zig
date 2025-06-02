@@ -13,7 +13,7 @@ const math = std.math;
 ///
 /// # Core Algorithm Steps:
 ///
-/// 1. **Input Smoothing**: The input signal is smoothed using a Weighted Moving Average (WMA)
+/// 1. **Input Smoothing**: The input signal is smoothed using a Weighted Moving Average (Wma)
 ///    over 4 periods to reduce noise.
 ///
 /// 2. **Hilbert Transform Components**: Recursive filters approximate the Hilbert Transform,

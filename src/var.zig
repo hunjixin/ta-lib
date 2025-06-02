@@ -5,7 +5,7 @@ const std = @import("std");
 /// The variance is a statistical measure of the dispersion of price values,
 /// defined by the formula:
 ///
-///     VAR = (1/N) * Σ (price_i - mean)^2
+///     Var = (1/N) * Σ (price_i - mean)^2
 ///
 /// where N is the period, price_i is each price in the period, and mean is the average price over the period.
 ///
@@ -19,7 +19,7 @@ const std = @import("std");
 ///
 /// Errors:
 /// - Returns an error if allocation fails or if the input is invalid.
-pub fn VAR(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn Var(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
     @memset(out, 0);
 
@@ -63,13 +63,13 @@ pub fn VAR(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]
     return out;
 }
 
-test "VAR work correctly" {
+test "Var work correctly" {
     const allocator = std.testing.allocator;
 
     const prices = [_]f64{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0 };
     const period = 5;
 
-    const result = try VAR(prices[0..], period, allocator);
+    const result = try Var(prices[0..], period, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, prices.len);

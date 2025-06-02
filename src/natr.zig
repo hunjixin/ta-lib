@@ -1,8 +1,8 @@
 const std = @import("std");
 const Trange = @import("lib.zig").Trange;
-const SMA = @import("lib.zig").SMA;
+const Sma = @import("lib.zig").Sma;
 
-pub fn NAtr(
+pub fn Natr(
     inHigh: []const f64,
     inLow: []const f64,
     inClose: []const f64,
@@ -24,7 +24,7 @@ pub fn NAtr(
 
     const tr = try Trange(inHigh, inLow, inClose, allocator);
     defer allocator.free(tr);
-    const prevATRTemp = try SMA(tr, inTimePeriod, allocator);
+    const prevATRTemp = try Sma(tr, inTimePeriod, allocator);
     defer allocator.free(prevATRTemp);
 
     var prevATR = prevATRTemp[inTimePeriod];
@@ -41,14 +41,14 @@ pub fn NAtr(
     return outReal;
 }
 
-test "NAtr basic test" {
+test "Natr basic test" {
     const allocator = std.testing.allocator;
 
     const highs = [_]f64{ 13.27, 15.84, 11.46, 16.92, 14.15, 10.58, 18.33, 12.71, 17.49, 9.94, 19.02, 11.88, 13.63, 14.91, 16.47, 12.39, 15.02, 10.73, 17.76, 13.05 };
     const lows = [_]f64{ 11.12, 13.91, 10.08, 15.44, 12.77, 9.86, 16.50, 11.62, 15.88, 8.94, 17.11, 10.55, 12.41, 13.59, 14.89, 10.94, 13.31, 9.21, 15.61, 11.82 };
     const closes = [_]f64{ 12.20, 14.65, 10.90, 16.30, 13.60, 10.15, 17.40, 12.10, 16.73, 9.40, 18.15, 11.11, 13.02, 14.20, 15.69, 11.60, 14.30, 10.01, 16.80, 12.51 };
 
-    const result = try NAtr(
+    const result = try Natr(
         &highs,
         &lows,
         &closes,

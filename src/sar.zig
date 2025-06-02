@@ -2,14 +2,14 @@ const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 const MinusDm = @import("./lib.zig").MinusDm;
 
-/// Calculates the Parabolic SAR (Stop and Reverse) indicator for a given DataFrame of f64 values.
+/// Calculates the Parabolic Sar (Stop and Reverse) indicator for a given DataFrame of f64 values.
 ///
-/// The Parabolic SAR is a trend-following indicator developed by J. Welles Wilder Jr. It is used to determine potential reversals in market price direction.
+/// The Parabolic Sar is a trend-following indicator developed by J. Welles Wilder Jr. It is used to determine potential reversals in market price direction.
 ///
 /// Formula:
-///   SAR(n) = SAR(n-1) + AF * (EP - SAR(n-1))
-///   - SAR(n): Current SAR value
-///   - SAR(n-1): Previous SAR value
+///   Sar(n) = Sar(n-1) + AF * (EP - Sar(n-1))
+///   - Sar(n): Current Sar value
+///   - Sar(n-1): Previous Sar value
 ///   - AF: Acceleration Factor (starts at inAcceleration, increases by inAcceleration up to inMaximum)
 ///   - EP: Extreme Point (highest high or lowest low during the current trend)
 ///
@@ -21,11 +21,11 @@ const MinusDm = @import("./lib.zig").MinusDm;
 ///   - `allocator`: Memory allocator for result allocation.
 ///
 /// Returns:
-/// - An array of f64 values representing the SAR for each period.
+/// - An array of f64 values representing the Sar for each period.
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if input data is invalid.
-pub fn SAR(inHigh: []const f64, inLow: []const f64, inAcceleration: f64, inMaximum: f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Sar(inHigh: []const f64, inLow: []const f64, inAcceleration: f64, inMaximum: f64, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
     @memset(out, 0);
@@ -129,13 +129,13 @@ pub fn SAR(inHigh: []const f64, inLow: []const f64, inAcceleration: f64, inMaxim
     return out;
 }
 
-test "SAR calculation with valid input" {
+test "Sar calculation with valid input" {
     const allocator = std.testing.allocator;
 
     const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19 };
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
 
-    const result = try SAR(&highs, &lows, 0.02, 0.2, allocator);
+    const result = try Sar(&highs, &lows, 0.02, 0.2, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, highs.len);

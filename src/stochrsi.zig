@@ -1,6 +1,6 @@
 const std = @import("std");
 const StochF = @import("./lib.zig").StochF;
-const RSI = @import("./lib.zig").RSI;
+const Rsi = @import("./lib.zig").Rsi;
 const MaType = @import("./lib.zig").MaType;
 const Ma = @import("./lib.zig").Ma;
 const IsZero = @import("./utils.zig").IsZero;
@@ -18,7 +18,7 @@ pub fn StochRsi(
     const lookbackSTOCHF = (inFastKPeriod - 1) + (inFastDPeriod - 1);
     const lookbackTotal = inTimePeriod + lookbackSTOCHF;
     const startIdx = lookbackTotal;
-    const tempRSIBuffer = try RSI(inReal, inTimePeriod, allocator);
+    const tempRSIBuffer = try Rsi(inReal, inTimePeriod, allocator);
     defer allocator.free(tempRSIBuffer);
 
     const tempk, const tempd = try StochF(tempRSIBuffer, tempRSIBuffer, tempRSIBuffer, inFastKPeriod, inFastDPeriod, inFastDMAType, allocator);

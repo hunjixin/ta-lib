@@ -4,7 +4,7 @@ const MyError = @import("./lib.zig").MyError;
 /// Calculates the Minus Directional Movement (MinusDM) indicator for a given DataFrame of f64 values.
 ///
 /// The MinusDM is a technical analysis indicator used to measure the downward price movement
-/// over a specified period. It is commonly used in the Average Directional Index (ADX) calculation.
+/// over a specified period. It is commonly used in the Average Directional Index (Adx) calculation.
 ///
 /// Formula:
 ///   MinusDM = Current Low - Previous Low, if (Previous High - Current High) < (Previous Low - Current Low) and (Previous Low - Current Low) > 0

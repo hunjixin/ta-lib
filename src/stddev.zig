@@ -1,5 +1,5 @@
 const std = @import("std");
-const VAR = @import("./lib.zig").VAR;
+const Var = @import("./lib.zig").Var;
 
 /// Calculates the standard deviation of a given slice of prices over a specified period.
 ///
@@ -19,7 +19,7 @@ const VAR = @import("./lib.zig").VAR;
 /// Errors:
 /// - Returns an error if memory allocation fails or if input parameters are invalid.
 pub fn StdDev(prices: []const f64, period: usize, inNbDev: f64, allocator: std.mem.Allocator) ![]f64 {
-    const outReal = try VAR(prices, period, allocator);
+    const outReal = try Var(prices, period, allocator);
     if (!std.math.approxEqAbs(f64, inNbDev, 1.0, 1e-9)) {
         for (0..prices.len) |i| {
             const tempReal = outReal[i];

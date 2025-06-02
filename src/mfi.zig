@@ -8,7 +8,7 @@ const moneyFlow = struct {
 
 /// Calculates the Money Flow Index (MFI) for a given financial DataFrame.
 ///
-/// The Money Flow Index is a volume-weighted version of the Relative Strength Index (RSI),
+/// The Money Flow Index is a volume-weighted version of the Relative Strength Index (Rsi),
 /// which uses both price and volume to measure buying and selling pressure.
 /// It ranges from 0 to 100, and is typically used to identify overbought or oversold conditions.
 ///

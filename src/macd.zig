@@ -1,32 +1,32 @@
 const std = @import("std");
-const EMAK = @import("./lib.zig").EMAK;
-const EMA = @import("./lib.zig").EMA;
+const Emak = @import("./ema.zig").Emak;
+const Ema = @import("./lib.zig").Ema;
 const MyError = @import("./lib.zig").MyError;
 
-/// Calculates the Moving Average Convergence Divergence (MACD) indicator for a given DataFrame of f64 values.
+/// Calculates the Moving Average Convergence Divergence (Macd) indicator for a given DataFrame of f64 values.
 ///
-/// The MACD is a trend-following momentum indicator that shows the relationship between two moving averages of prices.
+/// The Macd is a trend-following momentum indicator that shows the relationship between two moving averages of prices.
 /// It is calculated using the following formulas:
-///   - MACD Line = EMA(fastPeriod) - EMA(slowPeriod)
-///   - Signal Line = EMA(MACD Line, signalPeriod)
-///   - Histogram = MACD Line - Signal Line
+///   - Macd Line = Ema(fastPeriod) - Ema(slowPeriod)
+///   - Signal Line = Ema(Macd Line, signalPeriod)
+///   - Histogram = Macd Line - Signal Line
 ///
 /// Parameters:
 ///   - prices: Price sequence.
-///   - inFastPeriod: The period for the fast EMA (typically 12).
-///   - inSlowPeriod: The period for the slow EMA (typically 26).
-///   - inSignalPeriod: The period for the signal line EMA (typically 9).
+///   - inFastPeriod: The period for the fast Ema (typically 12).
+///   - inSlowPeriod: The period for the slow Ema (typically 26).
+///   - inSignalPeriod: The period for the signal line Ema (typically 9).
 ///   - allocator: Allocator used for memory management.
 ///
 /// Returns:
 ///   - A struct containing three slices of f64:
-///       1. The MACD line values.
+///       1. The Macd line values.
 ///       2. The Signal line values.
 ///       3. The Histogram values.
 ///
 /// Errors:
 ///   - Returns an error if memory allocation fails or if input parameters are invalid.
-pub fn MACD(
+pub fn Macd(
     prices: []const f64,
     inFastPeriod: usize,
     inSlowPeriod: usize,
@@ -64,13 +64,13 @@ pub fn MACD(
     const lookback_signal = inSignalPeriod - 1;
     const lookback_total = lookback_signal + (slow_period - 1);
 
-    // Compute fast and slow EMA
-    var fast_ema = try EMAK(prices, fast_period, k2, allocator);
-    const slow_ema = try EMAK(prices, slow_period, k1, allocator);
+    // Compute fast and slow Ema
+    var fast_ema = try Emak(prices, fast_period, k2, allocator);
+    const slow_ema = try Emak(prices, slow_period, k1, allocator);
     defer allocator.free(slow_ema);
     defer allocator.free(fast_ema);
 
-    // Subtract slow EMA from fast EMA
+    // Subtract slow Ema from fast Ema
     for (0..fast_ema.len) |i| {
         fast_ema[i] = fast_ema[i] - slow_ema[i];
     }
@@ -86,7 +86,7 @@ pub fn MACD(
     }
 
     // outMACDSignal
-    const out_macd_signal = try EMA(out_macd, inSignalPeriod, allocator);
+    const out_macd_signal = try Ema(out_macd, inSignalPeriod, allocator);
 
     // outMACDHist
     var out_macd_hist = try allocator.alloc(f64, prices.len);
@@ -105,12 +105,12 @@ pub fn MACD(
     };
 }
 
-test " MACD calculation with expected values" {
+test " Macd calculation with expected values" {
     const gpa = std.testing.allocator;
     const close_prices = [_]f64{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0 };
 
-    // Call MACD function
-    const macd, const signal, const histogram = try MACD(&close_prices, 0, 0, 9, gpa);
+    // Call Macd function
+    const macd, const signal, const histogram = try Macd(&close_prices, 0, 0, 9, gpa);
     defer gpa.free(macd);
     defer gpa.free(signal);
     defer gpa.free(histogram);
@@ -131,12 +131,12 @@ test " MACD calculation with expected values" {
     }
 }
 
-test " MACD calculation with period" {
+test " Macd calculation with period" {
     const gpa = std.testing.allocator;
     const close_prices = [_]f64{ 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0, 32.0, 33.0, 34.0, 35.0 };
 
-    // Call MACD function
-    const macd, const signal, const histogram = try MACD(&close_prices, 5, 10, 9, gpa);
+    // Call Macd function
+    const macd, const signal, const histogram = try Macd(&close_prices, 5, 10, 9, gpa);
     defer gpa.free(macd);
     defer gpa.free(signal);
     defer gpa.free(histogram);

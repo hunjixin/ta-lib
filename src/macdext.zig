@@ -2,18 +2,18 @@ const std = @import("std");
 const Ma = @import("./ma.zig").Ma;
 const MaType = @import("./ma.zig").MaType;
 
-/// Calculates the Extended MACD (Moving Average Convergence/Divergence) indicator
+/// Calculates the Extended Macd (Moving Average Convergence/Divergence) indicator
 /// with configurable fast, slow, and signal periods and moving average types.
 ///
-/// The MACD is a momentum oscillator that calculates the difference between two
+/// The Macd is a momentum oscillator that calculates the difference between two
 /// moving averages of price data. This extended version allows the user to select
-/// different moving average types (e.g., EMA, SMA, etc.) for the fast, slow, and
+/// different moving average types (e.g., Ema, Sma, etc.) for the fast, slow, and
 /// signal line calculations.
 ///
 /// # Arguments
 /// - `inReal`: Slice of input price values (usually closing prices).
 /// - `inFastPeriod`: The period for the fast moving average (e.g., 12).
-/// - `inFastMAType`: The type of moving average to use for the fast Ma (e.g., EMA).
+/// - `inFastMAType`: The type of moving average to use for the fast Ma (e.g., Ema).
 /// - `inSlowPeriod`: The period for the slow moving average (e.g., 26).
 /// - `inSlowMAType`: The type of moving average to use for the slow Ma.
 /// - `inSignalPeriod`: The period for the signal line moving average (e.g., 9).
@@ -22,17 +22,17 @@ const MaType = @import("./ma.zig").MaType;
 ///
 /// # Returns
 /// Returns a struct containing three slices:
-/// - `macd`: The MACD line (fast Ma - slow Ma)
-/// - `signal`: The signal line (Ma of the MACD line using `inSignalPeriod`)
-/// - `hist`: The MACD histogram (MACD - Signal)
+/// - `macd`: The Macd line (fast Ma - slow Ma)
+/// - `signal`: The signal line (Ma of the Macd line using `inSignalPeriod`)
+/// - `hist`: The Macd histogram (Macd - Signal)
 ///
 /// # Formula
 /// ```text
 /// FastMA = Ma(inReal, inFastPeriod, inFastMAType)
 /// SlowMA = Ma(inReal, inSlowPeriod, inSlowMAType)
-/// MACD = FastMA - SlowMA
-/// Signal = Ma(MACD, inSignalPeriod, inSignalMAType)
-/// Histogram = MACD - Signal
+/// Macd = FastMA - SlowMA
+/// Signal = Ma(Macd, inSignalPeriod, inSignalMAType)
+/// Histogram = Macd - Signal
 /// ```
 ///
 /// # Errors
@@ -73,14 +73,14 @@ pub fn MacdExt(
     const fastMABuffer = try Ma(inReal, inFastPeriod, inFastMAType, allocator);
     defer allocator.free(fastMABuffer);
 
-    // Calculate MACD line (fast Ma - slow Ma)
+    // Calculate Macd line (fast Ma - slow Ma)
     const tempBuffer1 = try allocator.alloc(f64, inReal.len);
     defer allocator.free(tempBuffer1);
     for (0..inReal.len) |i| {
         tempBuffer1[i] = fastMABuffer[i] - slowMABuffer[i];
     }
 
-    // Calculate signal line (Ma of MACD line)
+    // Calculate signal line (Ma of Macd line)
     const tempBuffer2 = try Ma(tempBuffer1, inSignalPeriod, inSignalMAType, allocator);
     defer allocator.free(tempBuffer2);
     // Calculate final outputs

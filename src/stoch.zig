@@ -24,9 +24,9 @@ const MyError = @import("./lib.zig").MyError;
 ///   - `close`: The closing price of the asset.
 ///   - `inFastKPeriod`: Look-back period for Fast %K calculation.
 ///   - `inSlowKPeriod`: Smoothing period for Slow %K (usually 3).
-///   - `inSlowKMAType`: num specifying the type of moving average to use (e.g., EMA, SMA)
+///   - `inSlowKMAType`: num specifying the type of moving average to use (e.g., Ema, Sma)
 ///   - `inSlowDPeriod`: Smoothing period for Slow %D (usually 3).
-///   - `inSlowDMAType`: num specifying the type of moving average to use (e.g., EMA, SMA)
+///   - `inSlowDMAType`: num specifying the type of moving average to use (e.g., Ema, Sma)
 ///   - `allocator`: Memory allocator to use for result arrays.
 ///
 /// Returns:

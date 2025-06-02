@@ -87,7 +87,7 @@ pub fn HtTrendLine(prices: []const f64, allocator: std.mem.Allocator) ![]f64 {
     var trailing_wma_idx: usize = start_idx - lookback_total;
     var today: usize = trailing_wma_idx;
 
-    // WMA initialization
+    // Wma initialization
     var period_wma_sub = prices[today];
     var period_wma_sum = prices[today];
     today += 1;

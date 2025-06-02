@@ -1,16 +1,16 @@
 const std = @import("std");
-const AD = @import("./lib.zig").AD;
-const EMA = @import("./lib.zig").EMA;
+const Ad = @import("./lib.zig").Ad;
+const Ema = @import("./lib.zig").Ema;
 const MyError = @import("./lib.zig").MyError;
 
-/// Calculates the Accumulation/Distribution Oscillator (ADOSC).
+/// Calculates the Accumulation/Distribution Oscillator (AdOsc).
 ///
-/// The ADOSC is a technical analysis indicator that measures the momentum
+/// The AdOsc is a technical analysis indicator that measures the momentum
 /// of the Accumulation/Distribution Line using the difference between two
 /// exponential moving averages (EMAs) of the Accumulation/Distribution Line.
 ///
 /// Formula:
-/// ADOSC = EMA(fast_period, ADL) - EMA(slow_period, ADL)
+/// AdOsc = Ema(fast_period, ADL) - Ema(slow_period, ADL)
 ///
 /// Where:
 /// - ADL (Accumulation/Distribution Line) is calculated as:
@@ -21,12 +21,12 @@ const MyError = @import("./lib.zig").MyError;
 /// - `low`: The low price of the asset.
 /// - `close`: The closing price of the asset.
 /// - `volume`: The trading volume of the asset.
-/// - `fast_period`: The period for the fast EMA.
-/// - `slow_period`: The period for the slow EMA.
+/// - `fast_period`: The period for the fast Ema.
+/// - `slow_period`: The period for the slow Ema.
 ///
 /// Returns:
-/// - The ADOSC value, which indicates the strength of buying or selling pressure.
-pub fn ADOSC(
+/// - The AdOsc value, which indicates the strength of buying or selling pressure.
+pub fn AdOsc(
     high: []const f64,
     low: []const f64,
     close: []const f64,
@@ -58,7 +58,7 @@ pub fn ADOSC(
 
     if (len == 0) return out;
 
-    // Initialize AD, fastEMA, slowEMA at the first valid index
+    // Initialize Ad, fastEMA, slowEMA at the first valid index
     {
         const high0 = high[today];
         const low0 = low[today];
@@ -111,7 +111,7 @@ pub fn ADOSC(
     return out;
 }
 
-test "ADOSC calculation" {
+test "AdOsc calculation" {
     const gpa = std.testing.allocator;
 
     const high = [_]f64{ 10.0, 12.0, 14.0, 16.0, 18.0 };
@@ -120,13 +120,13 @@ test "ADOSC calculation" {
     const volume = [_]f64{ 1000.0, 1500.0, 2000.0, 2500.0, 3000.0 };
 
     const expected_adosc = &[_]f64{ 0, 0, 212.30158730158723, 475.52910052910056, 749.779541446208 };
-    // Calculate ADOSC
+    // Calculate AdOsc
     const short_period = 2;
     const long_period = 3;
-    const adosc_values = try ADOSC(&high, &low, &close, &volume, short_period, long_period, gpa);
+    const adosc_values = try AdOsc(&high, &low, &close, &volume, short_period, long_period, gpa);
     defer gpa.free(adosc_values);
 
-    // Print ADOSC values
+    // Print AdOsc values
     for (2..expected_adosc.len) |i| {
         try std.testing.expectApproxEqAbs(expected_adosc[i], adosc_values[i], 1e-9);
     }

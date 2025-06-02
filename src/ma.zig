@@ -1,13 +1,12 @@
 const std = @import("std");
-pub const SMA = @import("sma.zig").SMA;
-pub const EMA = @import("ema.zig").EMA;
-pub const EMAK = @import("ema.zig").EMAK;
-pub const TEMA = @import("tema.zig").TEMA;
+pub const Sma = @import("sma.zig").Sma;
+pub const Ema = @import("ema.zig").Ema;
+pub const Tema = @import("tema.zig").Tema;
 pub const Trima = @import("trima.zig").Trima;
-pub const WMA = @import("wma.zig").WMA;
-pub const DEMA = @import("dema.zig").DEMA;
-pub const KAMA = @import("kama.zig").KAMA;
-pub const MAMA = @import("mama.zig").MAMA;
+pub const Wma = @import("wma.zig").Wma;
+pub const Dema = @import("dema.zig").Dema;
+pub const Kama = @import("kama.zig").Kama;
+pub const Mama = @import("mama.zig").Mama;
 pub const T3 = @import("t3.zig").T3;
 
 pub const MaType = enum {
@@ -35,15 +34,15 @@ pub fn Ma(
     }
 
     return switch (inMatype) {
-        .SMA => try SMA(inReal, inTimePeriod, allocator),
-        .EMA => try EMA(inReal, inTimePeriod, allocator),
-        .WMA => try WMA(inReal, inTimePeriod, allocator),
-        .DEMA => try DEMA(inReal, inTimePeriod, allocator),
-        .TEMA => try TEMA(inReal, inTimePeriod, allocator),
+        .SMA => try Sma(inReal, inTimePeriod, allocator),
+        .EMA => try Ema(inReal, inTimePeriod, allocator),
+        .WMA => try Wma(inReal, inTimePeriod, allocator),
+        .DEMA => try Dema(inReal, inTimePeriod, allocator),
+        .TEMA => try Tema(inReal, inTimePeriod, allocator),
         .TRIMA => try Trima(inReal, inTimePeriod, allocator),
-        .KAMA => try KAMA(inReal, inTimePeriod, allocator),
+        .KAMA => try Kama(inReal, inTimePeriod, allocator),
         .MAMA => {
-            const out_real, const _ignore = try MAMA(inReal, 0.5, 0.05, allocator);
+            const out_real, const _ignore = try Mama(inReal, 0.5, 0.05, allocator);
             allocator.free(_ignore);
             return out_real;
         },

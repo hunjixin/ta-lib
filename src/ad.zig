@@ -1,11 +1,11 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 
-// The AD function calculates the Accumulation/Distribution Line (ADL) for a given DataFrame.
+// The Ad function calculates the Accumulation/Distribution Line (ADL) for a given DataFrame.
 // Formula: ADL = SUM(((2 * Close - High - Low) / (High - Low)) * Volume)
 // This is a cumulative indicator that uses the relationship between the stock's price and volume
 // to determine the flow of money into or out of a stock over time.
-pub fn AD(high: []const f64, low: []const f64, close: []const f64, volume: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Ad(high: []const f64, low: []const f64, close: []const f64, volume: []const f64, allocator: std.mem.Allocator) ![]f64 {
     if (!(high.len == low.len and low.len == close.len and close.len == volume.len)) {
         return MyError.RowColumnMismatch;
     }
@@ -29,14 +29,14 @@ pub fn AD(high: []const f64, low: []const f64, close: []const f64, volume: []con
     return ads;
 }
 
-test "AD calculation works correctly" {
+test "Ad calculation works correctly" {
     const gpa = std.testing.allocator;
 
     const high = [_]f64{ 10.0, 12.0, 14.0 };
     const low = [_]f64{ 5.0, 6.0, 7.0 };
     const close = [_]f64{ 7.0, 10.0, 12.0 };
     const volume = [_]f64{ 1000.0, 1500.0, 2000.0 };
-    const adColumn = try AD(&high, &low, &close, &volume, gpa);
+    const adColumn = try Ad(&high, &low, &close, &volume, gpa);
     defer gpa.free(adColumn);
 
     try std.testing.expect(adColumn.len == 3);

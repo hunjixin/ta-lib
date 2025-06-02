@@ -4,7 +4,7 @@ const std = @import("std");
 ///
 /// Typical Price is a technical indicator that provides a simple average of the
 /// high, low, and close prices for a given time period. It is commonly used as a base
-/// for other indicators such as CCI (Commodity Channel Index) and Bollinger Bands.
+/// for other indicators such as Cci (Commodity Channel Index) and Bollinger Bands.
 ///
 /// # Formula:
 ///     Typical Price = (High + Low + Close) / 3

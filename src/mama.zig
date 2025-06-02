@@ -1,18 +1,18 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
-/// Calculates the MESA Adaptive Moving Average (MAMA) and Following Adaptive Moving Average (FAMA) for a given array of prices.
+/// Calculates the MESA Adaptive Moving Average (Mama) and Following Adaptive Moving Average (FAMA) for a given array of prices.
 ///
 /// - `prices`: Slice of input price data as f64 values.
-/// - `inFastLimit`: Fast limit parameter for the MAMA calculation.
-/// - `inSlowLimit`: Slow limit parameter for the MAMA calculation.
+/// - `inFastLimit`: Fast limit parameter for the Mama calculation.
+/// - `inSlowLimit`: Slow limit parameter for the Mama calculation.
 /// - `allocator`: Allocator used for memory allocation of the output arrays.
 ///
 /// Returns a struct containing two slices:
-///   - The first slice is the calculated MAMA values.
+///   - The first slice is the calculated Mama values.
 ///   - The second slice is the calculated FAMA values.
 ///
 /// Returns an error if memory allocation fails.
-pub fn MAMA(prices: []const f64, inFastLimit: f64, inSlowLimit: f64, allocator: std.mem.Allocator) !struct { []f64, []f64 } {
+pub fn Mama(prices: []const f64, inFastLimit: f64, inSlowLimit: f64, allocator: std.mem.Allocator) !struct { []f64, []f64 } {
     const math = std.math;
     if (prices.len == 0) return error.InvalidInput;
 
@@ -270,7 +270,7 @@ pub fn MAMA(prices: []const f64, inFastLimit: f64, inSlowLimit: f64, allocator: 
     return .{ outMAMA, outFAMA };
 }
 
-test "MAMA work correctly" {
+test "Mama work correctly" {
     var allocator = std.testing.allocator;
     const prices = [_]f64{
         82.4, 15.7, 63.2, 91.5, 27.8, 54.6, 39.1, 75.3, 44.2, 10.8, 67.5, 16.2, 23.9, 87.1, 19.6,
@@ -278,7 +278,7 @@ test "MAMA work correctly" {
         65.8, 12.6, 11.9, 13.3, 13.7, 13.1, 13.8, 15.4, 14.2, 10.6, 17.3, 43.1, 18.9, 17.7, 19.2,
         1.5,  2.7,  3.6,  4.8,  5.2,  6.4,  7.9,  8.3,  9.1,  9.7,  10.2, 11.6, 12.8, 13.9, 14.5,
     };
-    const mama, const fmana = try MAMA(&prices, 0.5, 0.05, allocator);
+    const mama, const fmana = try Mama(&prices, 0.5, 0.05, allocator);
     defer allocator.free(mama);
     defer allocator.free(fmana);
 

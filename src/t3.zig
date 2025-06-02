@@ -22,11 +22,11 @@ pub fn T3(
     const k = 2.0 / (@as(f64, @floatFromInt(inTimePeriod)) + 1.0);
     const one_minus_k = 1.0 - k;
 
-    // Initialize EMA buffers
+    // Initialize Ema buffers
     var today: usize = 0;
     var temp_real = prices[today];
     today += 1;
-    // Calculate first EMA (E1) seed
+    // Calculate first Ema (E1) seed
     var i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
         temp_real += prices[today];

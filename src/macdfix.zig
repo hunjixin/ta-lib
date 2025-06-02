@@ -1,30 +1,30 @@
 const std = @import("std");
-const MACD = @import("./lib.zig").MACD;
+const Macd = @import("./lib.zig").Macd;
 
-/// Calculates the MACD Fix indicator for a given time series of prices.
+/// Calculates the Macd Fix indicator for a given time series of prices.
 ///
-/// The MACD Fix (Moving Average Convergence/Divergence Fix) is a simplified version
-/// of the standard MACD indicator where the fast and slow EMA periods are fixed at
+/// The Macd Fix (Moving Average Convergence/Divergence Fix) is a simplified version
+/// of the standard Macd indicator where the fast and slow Ema periods are fixed at
 /// 12 and 26, respectively. Only the signal line period is configurable.
 ///
 /// # Arguments
 /// - `prices`: An array of input price data (typically closing prices).
-/// - `period`: The period of the signal line EMA (typically 9).
+/// - `period`: The period of the signal line Ema (typically 9).
 /// - `allocator`: The memory allocator used to allocate output arrays.
 ///
 /// # Returns
 /// A struct containing:
-/// - `macd`: The MACD line (EMA(12) - EMA(26))
-/// - `signal`: The signal line (EMA of MACD line over `period`)
-/// - `hist`: The histogram (MACD - Signal)
+/// - `macd`: The Macd line (Ema(12) - Ema(26))
+/// - `signal`: The signal line (Ema of Macd line over `period`)
+/// - `hist`: The histogram (Macd - Signal)
 ///
 /// # Formula
 /// ```text
-/// EMA_fast = EMA(prices, 12)
-/// EMA_slow = EMA(prices, 26)
-/// MACD = EMA_fast - EMA_slow
-/// Signal = EMA(MACD, period)
-/// Histogram = MACD - Signal
+/// EMA_fast = Ema(prices, 12)
+/// EMA_slow = Ema(prices, 26)
+/// Macd = EMA_fast - EMA_slow
+/// Signal = Ema(Macd, period)
+/// Histogram = Macd - Signal
 /// ```
 ///
 /// # Errors
@@ -38,7 +38,7 @@ pub fn MacdFix(
     []f64,
     []f64,
 } {
-    return MACD(prices, 0, 0, period, allocator);
+    return Macd(prices, 0, 0, period, allocator);
 }
 
 test "MacdFix calculation with expected values" {

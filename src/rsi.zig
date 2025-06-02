@@ -2,30 +2,30 @@ const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 const IsZero = @import("./utils.zig").IsZero;
 
-/// Calculates the Relative Strength Index (RSI) for a given array of closing prices.
+/// Calculates the Relative Strength Index (Rsi) for a given array of closing prices.
 ///
-/// The RSI is a momentum oscillator that measures the speed and change of price movements.
+/// The Rsi is a momentum oscillator that measures the speed and change of price movements.
 /// It is calculated using the following formula:
 ///
-///   RSI = 100 - (100 / (1 + RS))
+///   Rsi = 100 - (100 / (1 + RS))
 ///
 /// where RS (Relative Strength) is the average of 'n' days' up closes divided by the average of 'n' days' down closes,
 /// and 'n' is the input parameter `inTimePeriod`.
 ///
 /// Parameters:
 ///   closes: Array of closing prices (slice of f64).
-///   inTimePeriod: The period over which to calculate the RSI (typically 14).
+///   inTimePeriod: The period over which to calculate the Rsi (typically 14).
 ///   allocator: Allocator to use for the output array.
 ///
 /// Returns:
-///   An array of f64 values representing the RSI for each period, allocated using the provided allocator.
+///   An array of f64 values representing the Rsi for each period, allocated using the provided allocator.
 ///
 /// Errors:
 ///   Returns an error if allocation fails or if input parameters are invalid.
 ///
 /// Example:
-///   const rsi = try RSI(closes, 14, allocator);
-pub fn RSI(closes: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+///   const rsi = try Rsi(closes, 14, allocator);
+pub fn Rsi(closes: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, closes.len);
     @memset(out, 0);
 
@@ -78,9 +78,9 @@ pub fn RSI(closes: []const f64, inTimePeriod: usize, allocator: std.mem.Allocato
     return out;
 }
 
-test "RSI: basic functionality with known values" {
+test "Rsi: basic functionality with known values" {
     const allocator = std.testing.allocator;
-    // Example close prices and expected RSI values (rounded, for demonstration)
+    // Example close prices and expected Rsi values (rounded, for demonstration)
     // 先增长后下跌的趋势数据
     const closes = [_]f64{
         10.0, 11.0, 12.5, 13.0, 14.2, 15.0, 16.5, 17.0, 17.8, 18.0, // 上涨
@@ -88,7 +88,7 @@ test "RSI: basic functionality with known values" {
     };
     const period = 3;
 
-    const result = try RSI(&closes, period, allocator);
+    const result = try Rsi(&closes, period, allocator);
     defer allocator.free(result);
 
     const expected = [_]f64{ 0, 0, 0, 100, 100, 100, 100, 100, 100, 100, 72.52167357708255, 45.9858027199503, 28.25962428212623, 20.75809109716329, 14.84655250742954, 8.818977761760397, 5.753268615914092, 4.191948739046798, 2.979205310967679, 2.077614910366095 };

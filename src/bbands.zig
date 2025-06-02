@@ -7,11 +7,11 @@ const Ma = @import("./lib.zig").Ma;
 ///
 /// Bollinger Bands are a type of statistical chart characterizing the prices and volatility over time of a financial instrument or commodity,
 /// using a formulaic method propounded by John Bollinger in the 1980s.
-/// The bands are typically plotted two standard deviations (positively and negatively) away from a simple moving average (SMA) of the price,
+/// The bands are typically plotted two standard deviations (positively and negatively) away from a simple moving average (Sma) of the price,
 /// but can be adjusted to user preferences.
 ///
 /// Formula:
-///   - Middle Band = SMA(prices, inTimePeriod)
+///   - Middle Band = Sma(prices, inTimePeriod)
 ///   - Upper Band  = Middle Band + (inNbDevUp * StandardDeviation(prices, inTimePeriod))
 ///   - Lower Band  = Middle Band - (inNbDevDn * StandardDeviation(prices, inTimePeriod))
 ///
@@ -20,13 +20,13 @@ const Ma = @import("./lib.zig").Ma;
 ///   inTimePeriod  - Number of periods for the moving average and standard deviation
 ///   inNbDevUp     - Number of standard deviations for the upper band
 ///   inNbDevDn     - Number of standard deviations for the lower band
-///   maType        - Enum specifying the type of moving average to use (e.g., EMA, SMA)
+///   maType        - Enum specifying the type of moving average to use (e.g., Ema, Sma)
 ///   allocator     - Allocator for result arrays
 ///
 /// Returns:
 ///   A struct containing three slices of f64:
 ///     - Upper Band values
-///     - Middle Band (SMA) values
+///     - Middle Band (Sma) values
 ///     - Lower Band values
 ///
 /// Errors:

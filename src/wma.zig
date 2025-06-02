@@ -1,13 +1,13 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
 
-/// Calculates the Weighted Moving Average (WMA) for a given array of prices.
+/// Calculates the Weighted Moving Average (Wma) for a given array of prices.
 ///
-/// The WMA assigns more weight to recent prices, making it more responsive to new information
-/// compared to the Simple Moving Average (SMA).
+/// The Wma assigns more weight to recent prices, making it more responsive to new information
+/// compared to the Simple Moving Average (Sma).
 ///
 /// Formula:
-///   WMA = (P1 * W1 + P2 * W2 + ... + Pn * Wn) / (W1 + W2 + ... + Wn)
+///   Wma = (P1 * W1 + P2 * W2 + ... + Pn * Wn) / (W1 + W2 + ... + Wn)
 ///   where:
 ///     - Pn is the price at position n
 ///     - Wn is the weight for position n (typically, Wn = n for the most recent price)
@@ -18,11 +18,11 @@ const MyError = @import("./lib.zig").MyError;
 ///   allocator - Allocator to use for the result array.
 ///
 /// Returns:
-///   Allocated array of f64 containing the WMA values.
+///   Allocated array of f64 containing the Wma values.
 ///
 /// Errors:
 ///   Returns an error if allocation fails or if the input is invalid.
-pub fn WMA(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn Wma(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;
     var out = try allocator.alloc(f64, len);
     @memset(out, 0);
@@ -71,7 +71,7 @@ test "Wma work correctly" {
         10.1, 12.8, 11.4, 75.9, 13.7, 14.2, 13.5, 15.9, 14.8, 43.3, 32.6, 16.2, 13.4, 17.5, 76.1,
     };
 
-    const result = try WMA(&prices, 5, allocator);
+    const result = try Wma(&prices, 5, allocator);
     defer allocator.free(result);
 
     const expected = [_]f64{

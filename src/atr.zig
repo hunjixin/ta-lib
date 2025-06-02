@@ -1,6 +1,6 @@
 const std = @import("std");
 const Trange = @import("lib.zig").Trange;
-const SMA = @import("lib.zig").SMA;
+const Sma = @import("lib.zig").Sma;
 
 /// Calculates the Average True Range (ATR) indicator.
 ///
@@ -18,7 +18,7 @@ const SMA = @import("lib.zig").SMA;
 ///     ATR[i] = (previous ATR * (n - 1) + TR[i]) / n   -- for exponential
 ///     ATR[i] = sum(TR[i-n+1]..TR[i]) / n              -- for simple
 ///
-/// This implementation uses a **Simple Moving Average (SMA)** of the TR values.
+/// This implementation uses a **Simple Moving Average (Sma)** of the TR values.
 ///
 /// Parameters:
 /// - `inHigh`:     Slice of high prices
@@ -57,7 +57,7 @@ pub fn Atr(
     var today = inTimePeriod + 1;
     const tr = try Trange(inHigh, inLow, inClose, allocator);
     defer allocator.free(tr);
-    const prevATRTemp = try SMA(tr, inTimePeriod, allocator);
+    const prevATRTemp = try Sma(tr, inTimePeriod, allocator);
     defer allocator.free(prevATRTemp);
 
     var prevATR = prevATRTemp[inTimePeriod];

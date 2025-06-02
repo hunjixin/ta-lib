@@ -1,6 +1,6 @@
 const std = @import("std");
 
-pub fn AroonOSC(
+pub fn AroonOsc(
     inHigh: []const f64,
     inLow: []const f64,
     inTimePeriod: usize,
@@ -76,7 +76,7 @@ test "Aroon computes  correctly" {
     const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19, 21, 23, 22, 25, 24, 27, 29, 28, 30, 32, 31, 35, 34, 36, 38 };
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 };
 
-    const osc = try AroonOSC(&highs, &lows, 5, gpa);
+    const osc = try AroonOsc(&highs, &lows, 5, gpa);
     defer gpa.free(osc);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 100, 60, 100, 80, 60, 60, 60, 20, 20, 0, 80, 100, 60, 100, 80, 60, 80, 80, 100, 100, 80, 80, 80, 100, 100 };

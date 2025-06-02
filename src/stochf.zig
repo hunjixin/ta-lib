@@ -13,13 +13,13 @@ const MyError = @import("./lib.zig").MyError;
 ///
 /// Formula:
 ///   FastK = 100 * (Close - LowestLow) / (HighestHigh - LowestLow)
-///   FastD = SMA(FastK, inFastDPeriod)
+///   FastD = Sma(FastK, inFastDPeriod)
 ///
 /// Where:
 ///   - Close: Current closing price
 ///   - LowestLow: Lowest low over the last `inFastKPeriod` periods
 ///   - HighestHigh: Highest high over the last `inFastKPeriod` periods
-///   - SMA: Simple Moving Average
+///   - Sma: Simple Moving Average
 ///
 /// Parameters:
 ///   - `high`: The high price of the asset.
@@ -28,7 +28,7 @@ const MyError = @import("./lib.zig").MyError;
 ///   - `inFastKPeriod`: Look-back period for Fast %K calculation.
 ///   - `inFastKPeriod`: Number of periods for the FastK calculation
 ///   - `inFastDPeriod`: Number of periods for the FastD (moving average) calculation
-///   - `inSlowDMAType`: num specifying the type of moving average to use (e.g., EMA, SMA)
+///   - `inSlowDMAType`: num specifying the type of moving average to use (e.g., Ema, Sma)
 ///   - `allocator`: Allocator for memory management
 ///
 /// Returns:

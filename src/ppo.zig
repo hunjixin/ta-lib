@@ -1,5 +1,5 @@
 const std = @import("std");
-const EMA = @import("./lib.zig").EMA;
+const Ema = @import("./lib.zig").Ema;
 const MyError = @import("./lib.zig").MyError;
 const MaType = @import("./lib.zig").MaType;
 const Ma = @import("./lib.zig").Ma;
@@ -9,7 +9,7 @@ const IsZero = @import("./utils.zig").IsZero;
 ///
 /// The Percentage Price Oscillator is a momentum-based technical indicator that shows
 /// the percentage difference between two moving averages, typically a short-term and
-/// a long-term Exponential Moving Average (EMA). Unlike MACD (which outputs absolute values),
+/// a long-term Exponential Moving Average (Ema). Unlike Macd (which outputs absolute values),
 /// PPO outputs percentage values, making it more suitable for comparing assets of different price levels.
 ///
 /// ---
@@ -20,7 +20,7 @@ const IsZero = @import("./utils.zig").IsZero;
 /// Where:
 ///     - MA_fast = Moving Average over `inFastPeriod`
 ///     - MA_slow = Moving Average over `inSlowPeriod`
-///     - The type of Moving Average is defined by the `maType` parameter (e.g., EMA, SMA, etc.)
+///     - The type of Moving Average is defined by the `maType` parameter (e.g., Ema, Sma, etc.)
 ///
 /// This indicator is useful when:
 ///     - You want to compare momentum across assets with different price scales
@@ -32,7 +32,7 @@ const IsZero = @import("./utils.zig").IsZero;
 /// - `prices`: slice of input price data (typically closing prices)
 /// - `inFastPeriod`: lookback period for the fast moving average (e.g., 12)
 /// - `inSlowPeriod`: lookback period for the slow moving average (e.g., 26)
-/// - `maType`: enum specifying the type of moving average to use (e.g., EMA, SMA)
+/// - `maType`: enum specifying the type of moving average to use (e.g., Ema, Sma)
 /// - `allocator`: memory allocator used to allocate the result slice
 ///
 /// ---

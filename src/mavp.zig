@@ -3,13 +3,13 @@ const MyError = @import("./lib.zig").MyError;
 const MaType = @import("./lib.zig").MaType;
 const Ma = @import("./lib.zig").Ma;
 
-/// Calculates the Moving Average with Variable Period (MAVP) for a given price series.
+/// Calculates the Moving Average with Variable Period (Mavp) for a given price series.
 ///
-/// The MAVP is a moving average where the period can change at each data point,
+/// The Mavp is a moving average where the period can change at each data point,
 /// allowing for dynamic smoothing based on market conditions or other criteria.
-/// The formula for MAVP at index `i` is:
+/// The formula for Mavp at index `i` is:
 /// ```
-/// MAVP[i] = sum(prices[i - period/2 .. i + period/2]) / period
+/// Mavp[i] = sum(prices[i - period/2 .. i + period/2]) / period
 /// ```
 /// where `period` is clamped between `inMinPeriod` and `inMaxPeriod` and is taken from `inPeriods[i]`.
 ///
@@ -18,18 +18,18 @@ const Ma = @import("./lib.zig").Ma;
 /// - `inPeriods`: Array specifying the moving average period for each price point.
 /// - `inMinPeriod`: Minimum allowed period for the moving average.
 /// - `inMaxPeriod`: Maximum allowed period for the moving average.
-/// - `maType`: Enum specifying the type of moving average to use (e.g., EMA, SMA)
+/// - `maType`: Enum specifying the type of moving average to use (e.g., Ema, Sma)
 /// - `allocator`: Memory allocator for the result array.
 ///
 /// Returns:
-/// - Allocated array of MAVP values corresponding to each input price.
+/// - Allocated array of Mavp values corresponding to each input price.
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if input arrays have mismatched lengths.
 ///
 /// Reference:
-/// - [TA-Lib MAVP Documentation](https://ta-lib.org/function.html)
-pub fn MAVP(prices: []const f64, inPeriods: []const usize, inMinPeriod: usize, inMaxPeriod: usize, maType: MaType, allocator: std.mem.Allocator) ![]f64 {
+/// - [TA-Lib Mavp Documentation](https://ta-lib.org/function.html)
+pub fn Mavp(prices: []const f64, inPeriods: []const usize, inMinPeriod: usize, inMaxPeriod: usize, maType: MaType, allocator: std.mem.Allocator) ![]f64 {
     if (prices.len != inPeriods.len) {
         return MyError.RowColumnMismatch;
     }
@@ -77,7 +77,7 @@ pub fn MAVP(prices: []const f64, inPeriods: []const usize, inMinPeriod: usize, i
     return outReal;
 }
 
-test "MAVP work correctly" {
+test "Mavp work correctly" {
     var allocator = std.testing.allocator;
     const prices = [_]f64{
         82.4, 15.7, 63.2, 91.5, 27.8, 54.6, 39.1, 75.3, 44.2, 10.8, 67.5, 16.2, 23.9, 87.1, 19.6,
@@ -88,7 +88,7 @@ test "MAVP work correctly" {
         2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6, 2, 3, 4, 5, 6,
     };
 
-    const mavp = try MAVP(&prices, &periods, 2, 6, MaType.SMA, allocator);
+    const mavp = try Mavp(&prices, &periods, 2, 6, MaType.SMA, allocator);
     defer allocator.free(mavp);
 
     const expected = [_]f64{ 0.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 0.0000000000, 41.2000000000, 40.5000000000, 49.2000000000, 48.2000000000, 41.9666666667, 39.1500000000, 31.5000000000, 29.6000000000, 41.1000000000, 37.5166666667, 14.8500000000, 14.1666666667, 13.4750000000, 25.9600000000, 23.9166666667, 13.9500000000, 13.8000000000, 14.3250000000, 14.4200000000, 19.2333333333, 37.9500000000, 30.7000000000, 26.3750000000, 24.6000000000, 33.1833333333 };
