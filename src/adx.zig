@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculate the Average Directional Index (ADX) for a given DataFrame.
 ///
@@ -23,21 +22,20 @@ const DataFrame = @import("./lib.zig").DataFrame;
 /// - ADX = (previous_ADX * (period - 1) + current_DX) / period
 ///
 /// Parameters:
-/// - df: DataFrame containing "high", "low", and "close" columns
+/// - `high`: The high price of the asset.
+/// - `low`: The low price of the asset.
+/// - `close`: The closing price of the asset.
 /// - period: lookback period for smoothing (commonly 14)
 /// - allocator: memory allocator
 ///
 /// Returns:
 /// - Array of ADX values (length equals input data)
-pub fn ADX(df: *const DataFrame(f64), period: usize, allocator: std.mem.Allocator) ![]f64 {
-    const n = df.getRowCount();
+pub fn ADX(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+    const n = inHigh.len;
     var out = try allocator.alloc(f64, n);
+    errdefer allocator.free(out);
     @memset(out, 0);
     if (n == 0 or period < 2) return out;
-
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-    const inClose = try df.getColumnData("close");
 
     const inTimePeriodF = @as(f64, @floatFromInt(period));
     const lookbackTotal = (2 * period) - 1;
@@ -157,15 +155,8 @@ test "ADX computes expected values for simple data" {
     const lows = [_]f64{ 28, 29, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41 };
     const closes = [_]f64{ 29, 31, 30, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
     const period = 5;
-    const adx = try ADX(&df, period, allocator);
+    const adx = try ADX(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
     const expected = [_]f64{ 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 0e0, 1e2, 1e2, 1e2, 1e2, 1e2, 1e2 };
     for (adx, 0..) |v, i| {
@@ -181,15 +172,8 @@ test "ADX handles trend reversals and choppy data" {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
     const period = 5;
-    const adx = try ADX(&df, period, allocator);
+    const adx = try ADX(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 83.9503740135489, 70.6961927443363, 60.09284772896624, 50.99050951446177 };

@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 pub fn Cmo(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;

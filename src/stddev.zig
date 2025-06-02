@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 const VAR = @import("./lib.zig").VAR;
 
 /// Calculates the standard deviation of a given slice of prices over a specified period.

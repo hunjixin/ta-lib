@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculates the variance of the given `prices` over a specified `period`.
 ///

@@ -1,6 +1,4 @@
 const std = @import("std");
-const Column = @import("./lib.zig").Column;
-const DataFrame = @import("./lib.zig").DataFrame;
 const StochF = @import("./lib.zig").StochF;
 const RSI = @import("./lib.zig").RSI;
 const SMA = @import("./lib.zig").SMA;
@@ -21,14 +19,7 @@ pub fn StochRsi(
     const tempRSIBuffer = try RSI(inReal, inTimePeriod, allocator);
     defer allocator.free(tempRSIBuffer);
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", tempRSIBuffer);
-    try df.addColumnWithData("low", tempRSIBuffer);
-    try df.addColumnWithData("close", tempRSIBuffer);
-
-    const tempk, const tempd = try StochF(&df, inFastKPeriod, inFastDPeriod, allocator);
+    const tempk, const tempd = try StochF(tempRSIBuffer, tempRSIBuffer, tempRSIBuffer, inFastKPeriod, inFastDPeriod, allocator);
     defer allocator.free(tempd);
     defer allocator.free(tempk);
 
@@ -46,8 +37,6 @@ pub fn StochRsi(
 
 test "StochF calculation works with bigger dataset" {
     const gpa = std.testing.allocator;
-    var df = try DataFrame(f64).init(gpa);
-    defer df.deinit();
 
     const high_data = [_]f64{ 10.0, 25.0, 5.0, 40.0, 60.0, 15.0, 80.0, 100.0, 55.0, 120.0, 90.0, 150.0, 30.0, 200.0, 170.0, 250.0, 60.0, 300.0, 20.0, 350.0 };
 

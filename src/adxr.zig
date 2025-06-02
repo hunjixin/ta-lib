@@ -1,14 +1,14 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 const ADX = @import("./lib.zig").ADX;
 
-pub fn ADXR(df: *const DataFrame(f64), period: usize, allocator: std.mem.Allocator) ![]f64 {
-    const n = df.getRowCount();
+pub fn ADXR(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+    const n = inHigh.len;
     var out = try allocator.alloc(f64, n);
+    errdefer allocator.free(out);
     @memset(out, 0);
     if (n == 0 or period < 2) return out;
 
-    const tmpadx = try ADX(df, period, allocator);
+    const tmpadx = try ADX(inHigh, inLow, inClose, period, allocator);
     defer allocator.free(tmpadx);
 
     const start_idx = (2 * period) - 1;
@@ -34,15 +34,7 @@ test "ADXR work correctly" {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 };
     const closes = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 19, 20, 21, 23, 22, 24, 26, 25, 27, 29, 28, 32, 33, 34, 35 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
-    const period = 4;
-    const adx = try ADXR(&df, period, allocator);
+    const adx = try ADXR(&highs, &lows, &closes, 4, allocator);
     defer allocator.free(adx);
     const expected = [_]f64{ 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 0.000000000, 100.000000000, 90.789132364, 83.574216898, 78.163030298, 64.376863041, 53.092663427, 43.859122198, 36.813042854, 29.680794394, 23.561216531, 21.546045039, 20.199816055, 17.831396253, 20.063770654, 24.719782246, 26.853042875, 32.997258838, 39.212122447, 44.917263944, 52.662775320 };
     for (adx, 0..) |v, i| {

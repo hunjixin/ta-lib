@@ -1,6 +1,5 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculates the Plus Directional Movement (+DM) indicator for a given DataFrame of f64 values.
 ///
@@ -9,18 +8,17 @@ const DataFrame = @import("./lib.zig").DataFrame;
 ///   +DM = current_high - previous_high, if (current_high - previous_high) > (previous_low - current_low) and (current_high - previous_high) > 0; otherwise, +DM = 0
 ///
 /// Parameters:
-/// - df: Pointer to a DataFrame containing f64 values representing the price data (typically high, low, close columns).
-/// - inTimePeriod: The period over which to calculate the indicator.
-/// - allocator: Allocator used for memory management.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `inTimePeriod`: The period over which to calculate the indicator.
+///   - `allocator`: Allocator used for memory management.
 ///
 /// Returns:
 /// - An array of f64 values representing the calculated +DM values for each period.
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if input parameters are invalid.
-pub fn PlusDM(df: *const DataFrame(f64), inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
+pub fn PlusDM(inHigh: []const f64, inLow: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var outReal = try allocator.alloc(f64, len);
     if (len == 0) return outReal;
@@ -102,13 +100,7 @@ test "PlusDM calculation with valid input" {
     const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19 };
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-
-    const result = try PlusDM(&df, 4, allocator);
+    const result = try PlusDM(&highs, &lows, 4, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, highs.len);

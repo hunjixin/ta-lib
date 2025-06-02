@@ -1,9 +1,7 @@
 const std = @import("std");
-const Column = @import("./lib.zig").Column;
-const DataFrame = @import("./lib.zig").DataFrame;
 const MyError = @import("./lib.zig").MyError;
 
-/// Calculates the Balance of Power (BOP) indicator for the given DataFrame.
+/// Calculates the Balance of Power (BOP) indicator for the given prices.
 ///
 /// The Balance of Power (BOP) is a technical analysis indicator that measures the strength of buyers versus sellers
 /// by comparing the distance between the close and open prices to the distance between the high and low prices.
@@ -11,17 +9,15 @@ const MyError = @import("./lib.zig").MyError;
 /// Formula:
 ///     BOP = (Close - Open) / (High - Low)
 ///
-/// - `df`: Pointer to a DataFrame containing columns for Open, High, Low, and Close prices (as f64).
+/// - `open`: The open price of the asset.
+/// - `high`: The high price of the asset.
+/// - `low`: The low price of the asset.
+/// - `close`: The closing price of the asset.
 /// - `allocator`: Allocator to use for the result array.
 ///
-/// Returns an array of f64 values representing the BOP for each row in the DataFrame.
+/// Returns an array of f64 values representing the BOP for each row.
 /// Returns an error if memory allocation fails or if required columns are missing.
-pub fn Bop(df: *const DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
-    const high = try df.getColumnData("high");
-    const low = try df.getColumnData("low");
-    const close = try df.getColumnData("close");
-    const open = try df.getColumnData("open");
-
+pub fn Bop(open: []const f64, high: []const f64, low: []const f64, close: []const f64, allocator: std.mem.Allocator) ![]f64 {
     if (!(high.len == low.len and low.len == close.len and close.len == open.len)) {
         return MyError.RowColumnMismatch;
     }
@@ -38,14 +34,11 @@ pub fn Bop(df: *const DataFrame(f64), allocator: std.mem.Allocator) ![]f64 {
 test "Bop calculation works correctly" {
     const gpa = std.testing.allocator;
 
-    var df = try DataFrame(f64).init(gpa);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", &[_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19, 21, 23, 22, 25, 24, 27, 29, 28, 30, 32, 31, 35, 34, 36, 38 });
-    try df.addColumnWithData("low", &[_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 });
-    try df.addColumnWithData("close", &[_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 19, 20, 21, 23, 22, 24, 26, 25, 27, 29, 28, 32, 33, 34, 35 });
-    try df.addColumnWithData("open", &[_]f64{ 8, 10, 10, 11, 12, 13, 12, 14, 13, 15, 99, 14, 15, 15, 16, 18, 19, 20, 22, 21, 23, 25, 24, 26, 28, 27, 31, 32, 33, 34 });
-    const adColumn = try Bop(&df, gpa);
+    const high = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19, 21, 23, 22, 25, 24, 27, 29, 28, 30, 32, 31, 35, 34, 36, 38 };
+    const low = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 };
+    const close = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 19, 20, 21, 23, 22, 24, 26, 25, 27, 29, 28, 32, 33, 34, 35 };
+    const open = [_]f64{ 8, 10, 10, 11, 12, 13, 12, 14, 13, 15, 99, 14, 15, 15, 16, 18, 19, 20, 22, 21, 23, 25, 24, 26, 28, 27, 31, 32, 33, 34 };
+    const adColumn = try Bop(&open, &high, &low, &close, gpa);
     defer gpa.free(adColumn);
 
     const expect = [_]f64{

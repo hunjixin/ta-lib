@@ -1,6 +1,4 @@
 const std = @import("std");
-const Column = @import("./lib.zig").Column;
-const DataFrame = @import("./lib.zig").DataFrame;
 const SMA = @import("./lib.zig").SMA;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
@@ -18,12 +16,14 @@ const MyError = @import("./lib.zig").MyError;
 ///   - Mean Deviation = Average of the absolute differences between Typical Price and SMA
 ///
 /// Parameters:
-///   - df: Pointer to a DataFrame containing f64 values, expected to have columns for High, Low, and Close prices.
-///   - inTimePeriod: The period over which to calculate the CCI (e.g., 14).
-///   - allocator: Memory allocator to use for the result array.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `close`: The closing price of the asset.
+///   - `inTimePeriod`: The period over which to calculate the CCI (e.g., 14).
+///   - `allocator`: Memory allocator to use for the result array.
 ///
 /// Returns:
-///   - An array of f64 values representing the CCI for each row in the input DataFrame.
+///   - An array of f64 values representing the CCI for each row.
 ///
 /// Errors:
 ///   - Returns an error if memory allocation fails or if input data is insufficient.
@@ -33,19 +33,18 @@ const MyError = @import("./lib.zig").MyError;
 /// const cci_values = try CCI(&data_frame, 14, allocator);
 /// ```
 pub fn CCI(
-    df: *const DataFrame(f64),
+    inHigh: []const f64,
+    inLow: []const f64,
+    inClose: []const f64,
     inTimePeriod: usize,
     allocator: std.mem.Allocator,
 ) ![]f64 {
-    const len = df.getRowCount();
+    const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
     const inTimePeriodF: f64 = @floatFromInt(inTimePeriod);
     const lookbackTotal = inTimePeriod - 1;
-
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-    const inClose = try df.getColumnData("close");
 
     var buffer = try allocator.alloc(f64, inTimePeriod);
     defer allocator.free(buffer);
@@ -90,15 +89,7 @@ test "CCI work correctly" {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
-    const period = 5;
-    const adx = try CCI(&df, period, allocator);
+    const adx = try CCI(&highs, &lows, &closes, 5, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 113.82113821138218, 92.10526315789485, 47.61904761904769, 142.85714285714295, 61.40350877192985, 166.6666666666667, 41.09303295786401, -51.64319248826292, -50.458715596330265, -54.80984340044743, -32.828282828282845 };
@@ -115,15 +106,7 @@ test "CCI handles with 1 period" {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
-    const period = 1;
-    const adx = try CCI(&df, period, allocator);
+    const adx = try CCI(&highs, &lows, &closes, 1, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };

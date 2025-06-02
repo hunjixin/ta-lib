@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 const StdDev = @import("./lib.zig").StdDev;
 const SMA = @import("./lib.zig").SMA;
 

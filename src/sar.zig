@@ -1,6 +1,5 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
-const DataFrame = @import("./lib.zig").DataFrame;
 const MinusDm = @import("./lib.zig").MinusDm;
 
 /// Calculates the Parabolic SAR (Stop and Reverse) indicator for a given DataFrame of f64 values.
@@ -15,20 +14,19 @@ const MinusDm = @import("./lib.zig").MinusDm;
 ///   - EP: Extreme Point (highest high or lowest low during the current trend)
 ///
 /// Parameters:
-/// - `df`: Pointer to a DataFrame containing input price data (typically high and low prices).
-/// - `inAcceleration`: Initial acceleration factor (commonly 0.02).
-/// - `inMaximum`: Maximum acceleration factor (commonly 0.2).
-/// - `allocator`: Memory allocator for result allocation.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `inAcceleration`: Initial acceleration factor (commonly 0.02).
+///   - `inMaximum`: Maximum acceleration factor (commonly 0.2).
+///   - `allocator`: Memory allocator for result allocation.
 ///
 /// Returns:
 /// - An array of f64 values representing the SAR for each period.
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if input data is invalid.
-pub fn SAR(df: *const DataFrame(f64), inAcceleration: f64, inMaximum: f64, allocator: std.mem.Allocator) ![]f64 {
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-    const len = df.getRowCount();
+pub fn SAR(inHigh: []const f64, inLow: []const f64, inAcceleration: f64, inMaximum: f64, allocator: std.mem.Allocator) ![]f64 {
+    const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
     @memset(out, 0);
 
@@ -37,7 +35,7 @@ pub fn SAR(df: *const DataFrame(f64), inAcceleration: f64, inMaximum: f64, alloc
         af = inMaximum;
     }
 
-    const epTemp = try MinusDm(df, 1, allocator);
+    const epTemp = try MinusDm(inHigh, inLow, 1, allocator);
     var isLong: i32 = 1;
     if (epTemp.len > 1 and epTemp[1] > 0) {
         isLong = 0;
@@ -137,13 +135,7 @@ test "SAR calculation with valid input" {
     const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19 };
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-
-    const result = try SAR(&df, 0.02, 0.2, allocator);
+    const result = try SAR(&highs, &lows, 0.02, 0.2, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, highs.len);

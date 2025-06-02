@@ -1,6 +1,4 @@
 const std = @import("std");
-const Column = @import("./lib.zig").Column;
-const DataFrame = @import("./lib.zig").DataFrame;
 const AD = @import("./lib.zig").AD;
 const EMA = @import("./lib.zig").EMA;
 const MyError = @import("./lib.zig").MyError;
@@ -19,26 +17,24 @@ const MyError = @import("./lib.zig").MyError;
 ///   ADL = ((Close - Low) - (High - Close)) / (High - Low) * Volume
 ///
 /// Parameters:
-/// - `fast_period`: The period for the fast EMA.
-/// - `slow_period`: The period for the slow EMA.
 /// - `high`: The high price of the asset.
 /// - `low`: The low price of the asset.
 /// - `close`: The closing price of the asset.
 /// - `volume`: The trading volume of the asset.
+/// - `fast_period`: The period for the fast EMA.
+/// - `slow_period`: The period for the slow EMA.
 ///
 /// Returns:
 /// - The ADOSC value, which indicates the strength of buying or selling pressure.
 pub fn ADOSC(
-    df: *const DataFrame(f64),
+    high: []const f64,
+    low: []const f64,
+    close: []const f64,
+    volume: []const f64,
     fast_period: usize,
     slow_period: usize,
     allocator: std.mem.Allocator,
 ) ![]f64 {
-    // Get columns
-    const high = try df.getColumnData("high");
-    const low = try df.getColumnData("low");
-    const close = try df.getColumnData("close");
-    const volume = try df.getColumnData("volume");
     const len = high.len;
 
     if (fast_period < 2 or slow_period < 2) {
@@ -117,23 +113,17 @@ pub fn ADOSC(
 
 test "ADOSC calculation" {
     const gpa = std.testing.allocator;
-    // Create a mock DataFrame
-    var df = try DataFrame(f64).init(gpa);
-    defer df.deinit();
 
-    // Add "High", "Low", "Close", and "Volume" columns
-    try df.addColumnWithData("high", &[_]f64{ 10.0, 12.0, 14.0, 16.0, 18.0 });
-    try df.addColumnWithData("low", &[_]f64{ 5.0, 6.0, 7.0, 8.0, 9.0 });
-    try df.addColumnWithData("close", &[_]f64{ 7.0, 10.0, 12.0, 15.0, 17.0 });
-    try df.addColumnWithData("volume", &[_]f64{ 1000.0, 1500.0, 2000.0, 2500.0, 3000.0 });
+    const high = [_]f64{ 10.0, 12.0, 14.0, 16.0, 18.0 };
+    const low = [_]f64{ 5.0, 6.0, 7.0, 8.0, 9.0 };
+    const close = [_]f64{ 7.0, 10.0, 12.0, 15.0, 17.0 };
+    const volume = [_]f64{ 1000.0, 1500.0, 2000.0, 2500.0, 3000.0 };
 
-    // Expected ADOSC values (manually calculated or from a trusted source)
-    // Adjust expected ADOSC values to have 5 elements
     const expected_adosc = &[_]f64{ 0, 0, 212.30158730158723, 475.52910052910056, 749.779541446208 };
     // Calculate ADOSC
     const short_period = 2;
     const long_period = 3;
-    const adosc_values = try ADOSC(&df, short_period, long_period, gpa);
+    const adosc_values = try ADOSC(&high, &low, &close, &volume, short_period, long_period, gpa);
     defer gpa.free(adosc_values);
 
     // Print ADOSC values

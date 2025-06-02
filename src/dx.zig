@@ -1,22 +1,20 @@
 const std = @import("std");
 const math = std.math;
-const DataFrame = @import("./lib.zig").DataFrame;
 const MyError = @import("./lib.zig").MyError;
 
 pub fn Dx(
-    df: *const DataFrame(f64),
+    inHigh: []const f64,
+    inLow: []const f64,
+    inClose: []const f64,
     inTimePeriod: usize,
     allocator: std.mem.Allocator,
 ) ![]f64 {
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-    const inClose = try df.getColumnData("close");
-
     if (!(inHigh.len == inLow.len and inLow.len == inClose.len)) {
         return MyError.RowColumnMismatch;
     }
 
     var outReal = try allocator.alloc(f64, inClose.len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     const lookbackTotal = if (inTimePeriod > 1) inTimePeriod else 2;
@@ -134,15 +132,7 @@ test "Dx work correctly " {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 };
     const closes = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 19, 20, 21, 23, 22, 24, 26, 25, 27, 29, 28, 32, 33, 34, 35 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
-    const period = 5;
-    const adx = try Dx(&df, period, allocator);
+    const adx = try Dx(&highs, &lows, &closes, 5, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 100, 100, 100, 100, 100, 100, 19.75187006774451, 17.679467667485966, 17.67946766748596, 14.581156656443875, 10.930383547745674, 6.681538206967594, 8.863233239693006, 0.08835144073209814, 0.08835144073210846, 11.107226757123437, 18.68676877809035, 12.68180591808232, 22.486326193263842, 32.026788234572685, 32.026788234572685, 50.90868987882754, 50.90868987882755, 59.66266275275333, 67.01502292272959 };

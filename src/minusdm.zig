@@ -1,6 +1,5 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculates the Minus Directional Movement (MinusDM) indicator for a given DataFrame of f64 values.
 ///
@@ -12,18 +11,17 @@ const DataFrame = @import("./lib.zig").DataFrame;
 ///   Otherwise, MinusDM = 0
 ///
 /// Parameters:
-/// - df: Pointer to a DataFrame containing the input data (typically OHLC data).
-/// - inTimePeriod: The period over which to calculate the MinusDM.
-/// - allocator: Memory allocator for the output array.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `inTimePeriod`: The period over which to calculate the MinusDM.
+///   - `allocator`: Memory allocator for the output array.
 ///
 /// Returns:
 /// - An array of f64 values representing the MinusDM for each period.
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if input data is invalid.
-pub fn MinusDm(df: *const DataFrame(f64), inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
+pub fn MinusDm(inHigh: []const f64, inLow: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var outReal = try allocator.alloc(f64, len);
     if (len == 0) return outReal;
@@ -106,13 +104,7 @@ test "MinusDm calculation with valid input" {
     const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19 };
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-
-    const result = try MinusDm(&df, 4, allocator);
+    const result = try MinusDm(&highs, &lows, 4, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, highs.len);

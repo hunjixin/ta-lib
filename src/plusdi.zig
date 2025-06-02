@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculates the Plus Directional Indicator (+DI) for a given DataFrame of f64 values over a specified period.
 ///
@@ -12,25 +11,23 @@ const DataFrame = @import("./lib.zig").DataFrame;
 ///   +DI = 100 * (Smoothed +DM / Smoothed TR)
 ///
 /// Arguments:
-///   df: Pointer to a DataFrame containing f64 price data (typically with columns: high, low, close).
-///   period: The number of periods to use for smoothing (e.g., 14).
-///   allocator: Allocator to use for result memory allocation.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `close`: The closing price of the asset.
+///   - `period`: The number of periods to use for smoothing (e.g., 14).
+///   - `allocator`: Allocator to use for result memory allocation.
 ///
 /// Returns:
-///   An array of f64 values representing the +DI for each period in the input DataFrame.
+///   An array of f64 values representing the +DI for each period.
 ///
 /// Errors:
 ///   Returns an error if memory allocation fails or if the input DataFrame is invalid.
-pub fn PlusDI(df: *const DataFrame(f64), period: usize, allocator: std.mem.Allocator) ![]f64 {
-    const len = df.getRowCount();
+pub fn PlusDI(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+    const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
     @memset(out, 0);
 
     if (len == 0 or period == 0 or len <= period) return out;
-
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-    const inClose = try df.getColumnData("close");
 
     var plus_dm: f64 = 0;
     var tr: f64 = 0;
@@ -74,15 +71,8 @@ test "PlusDI " {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
     const period = 5;
-    const adx = try PlusDI(&df, period, allocator);
+    const adx = try PlusDI(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 45.652173913043484, 40.19138755980862, 53.9594843462247, 47.17246930972028, 96.36207410281818, 45.38278250731527, 45.02405540630219, 46.0893931101081, 45.53786546706974, 47.11983850178317 };
@@ -99,15 +89,8 @@ test "PlusDI 1 perid " {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
     const period = 1;
-    const adx = try PlusDI(&df, period, allocator);
+    const adx = try PlusDI(&highs, &lows, &closes, period, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0.6666666666666666, 0, 0.6666666666666666, 0, 0.5, 0, 1, 0, 1, 0, 0, 1, 0, 1 };

@@ -1,14 +1,11 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 pub fn AroonOSC(
-    df: *const DataFrame(f64),
+    inHigh: []const f64,
+    inLow: []const f64,
     inTimePeriod: usize,
     allocator: std.mem.Allocator,
 ) ![]f64 {
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-
     const len = inHigh.len;
     if (len != inLow.len) return error.InvalidInput;
 
@@ -76,47 +73,13 @@ pub fn AroonOSC(
 test "Aroon computes  correctly" {
     const gpa = std.testing.allocator;
 
-    var df = try DataFrame(f64).init(gpa);
-    defer df.deinit();
+    const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19, 21, 23, 22, 25, 24, 27, 29, 28, 30, 32, 31, 35, 34, 36, 38 };
+    const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 };
 
-    try df.addColumnWithData("high", &[_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19, 21, 23, 22, 25, 24, 27, 29, 28, 30, 32, 31, 35, 34, 36, 38 });
-    try df.addColumnWithData("low", &[_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17, 18, 19, 18, 20, 21, 22, 24, 23, 25, 26, 27, 28, 29, 30, 31 });
-
-    const osc = try AroonOSC(&df, 5, gpa);
+    const osc = try AroonOSC(&highs, &lows, 5, gpa);
     defer gpa.free(osc);
 
-    const expected = [_]f64{
-        0,
-        0,
-        0,
-        0,
-        0,
-        100,
-        60,
-        100,
-        80,
-        60,
-        60,
-        60,
-        20,
-        20,
-        0,
-        80,
-        100,
-        60,
-        100,
-        80,
-        60,
-        80,
-        80,
-        100,
-        100,
-        80,
-        80,
-        80,
-        100,
-        100,
-    };
+    const expected = [_]f64{ 0, 0, 0, 0, 0, 100, 60, 100, 80, 60, 60, 60, 20, 20, 0, 80, 100, 60, 100, 80, 60, 80, 80, 100, 100, 80, 80, 80, 100, 100 };
     for (expected, 0..) |exp, i| {
         try std.testing.expectApproxEqAbs(exp, osc[i], 1e-9);
     }

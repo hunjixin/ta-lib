@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculates the Minus Directional Indicator (-DI) for a given DataFrame of f64 values over a specified period.
 ///
@@ -15,28 +14,26 @@ const DataFrame = @import("./lib.zig").DataFrame;
 ///   - -DI = 100 * (Smoothed -DM / Smoothed TR)
 ///
 /// Parameters:
-///   - df: Pointer to a DataFrame containing f64 values with columns: high, low, close.
-///   - period: The number of periods to use for smoothing (e.g., 14).
-///   - allocator: The allocator to use for memory management.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `close`: The closing price of the asset.
+///   - `period`: The number of periods to use for smoothing (e.g., 14).
+///   - `allocator`: The allocator to use for memory management.
 ///
 /// Returns:
-///   - An array of f64 values representing the -DI for each period in the input DataFrame.
+///   - An array of f64 values representing the -DI for each period.
 ///
 /// Errors:
 ///   - Returns an error if memory allocation fails or if the input DataFrame is invalid.
 ///
 /// Reference:
 ///   - J. Welles Wilder, "New Concepts in Technical Trading Systems", 1978.
-pub fn MinusDI(df: *const DataFrame(f64), period: usize, allocator: std.mem.Allocator) ![]f64 {
-    const len = df.getRowCount();
+pub fn MinusDI(inHigh: []const f64, inLow: []const f64, inClose: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
+    const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
     @memset(out, 0);
 
     if (len == 0 or period == 0 or len <= period) return out;
-
-    const inHigh = try df.getColumnData("high");
-    const inLow = try df.getColumnData("low");
-    const inClose = try df.getColumnData("close");
 
     var minus_dm: f64 = 0;
     var tr: f64 = 0;
@@ -80,15 +77,7 @@ test "MinusDI " {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
-    const period = 5;
-    const adx = try MinusDI(&df, period, allocator);
+    const adx = try MinusDI(&highs, &lows, &closes, 5, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 67.18804335365883, 65.88605652362618, 65.0976325715738, 63.20672799658612 };
@@ -105,15 +94,7 @@ test "MinusDI 1 perid " {
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
     const closes = [_]f64{ 9, 11, 10, 12, 13, 13, 13, 14, 14, 100, 16, 16, 17, 17, 18 };
 
-    var df = try DataFrame(f64).init(allocator);
-    defer df.deinit();
-
-    try df.addColumnWithData("high", highs[0..]);
-    try df.addColumnWithData("low", lows[0..]);
-    try df.addColumnWithData("close", closes[0..]);
-
-    const period = 1;
-    const adx = try MinusDI(&df, period, allocator);
+    const adx = try MinusDI(&highs, &lows, &closes, 1, allocator);
     defer allocator.free(adx);
 
     const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 85, 0, 0, 0 };

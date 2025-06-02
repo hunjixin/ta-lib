@@ -1,5 +1,4 @@
 const std = @import("std");
-const DataFrame = @import("./lib.zig").DataFrame;
 
 /// Calculates the Simple Moving Average (SMA) for a given price array and period.
 ///

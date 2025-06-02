@@ -1,7 +1,4 @@
 const std = @import("std");
-const Column = @import("./lib.zig").Column;
-const DataFrame = @import("./lib.zig").DataFrame;
-const AD = @import("./lib.zig").AD;
 const EMAK = @import("./lib.zig").EMAK;
 const EMA = @import("./lib.zig").EMA;
 const MyError = @import("./lib.zig").MyError;

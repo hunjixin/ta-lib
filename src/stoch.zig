@@ -1,6 +1,4 @@
 const std = @import("std");
-const Column = @import("./lib.zig").Column;
-const DataFrame = @import("./lib.zig").DataFrame;
 const SMA = @import("./lib.zig").SMA;
 const IsZero = @import("./utils.zig").IsZero;
 const MyError = @import("./lib.zig").MyError;
@@ -20,11 +18,13 @@ const MyError = @import("./lib.zig").MyError;
 /// The Slow %D is a moving average of Slow %K over inSlowDPeriod.
 ///
 /// Parameters:
-///   - df: Pointer to a DataFrame containing f64 values (OHLC data required).
-///   - inFastKPeriod: Look-back period for Fast %K calculation.
-///   - inSlowKPeriod: Smoothing period for Slow %K (usually 3).
-///   - inSlowDPeriod: Smoothing period for Slow %D (usually 3).
-///   - allocator: Memory allocator to use for result arrays.
+///   - `high`: The high price of the asset.
+///   - `low`: The low price of the asset.
+///   - `close`: The closing price of the asset.
+///   - `inFastKPeriod`: Look-back period for Fast %K calculation.
+///   - `inSlowKPeriod`: Smoothing period for Slow %K (usually 3).
+///   - `inSlowDPeriod`: Smoothing period for Slow %D (usually 3).
+///   - `allocator`: Memory allocator to use for result arrays.
 ///
 /// Returns:
 ///   - A struct containing two slices of f64:
@@ -34,15 +34,14 @@ const MyError = @import("./lib.zig").MyError;
 /// Errors:
 ///   - Returns an error if memory allocation fails or input parameters are invalid.
 pub fn Stoch(
-    df: *const DataFrame(f64),
+    high: []const f64,
+    low: []const f64,
+    close: []const f64,
     inFastKPeriod: usize,
     inSlowKPeriod: usize,
     inSlowDPeriod: usize,
     allocator: std.mem.Allocator,
 ) !struct { []f64, []f64 } {
-    const high = try df.getColumnData("high");
-    const low = try df.getColumnData("low");
-    const close = try df.getColumnData("close");
     const len = close.len;
 
     var outSlowK = try allocator.alloc(f64, len);
@@ -95,28 +94,21 @@ pub fn Stoch(
 test "Stoch calculation works with bigger dataset" {
     const gpa = std.testing.allocator;
 
-    var df = try DataFrame(f64).init(gpa);
-    defer df.deinit();
-
-    const high_data = [_]f64{
+    const highs = [_]f64{
         15.2, 16.8, 18.5, 19.1, 20.7, 22.3, 23.0, 24.8, 26.1, 27.5,
         28.9, 30.2, 31.7, 33.0, 34.4, 35.8, 37.1, 38.5, 39.9, 41.2,
     };
-    const low_data = [_]f64{
+    const lows = [_]f64{
         13.1, 14.0, 15.7, 16.2, 17.8, 19.0, 20.2, 21.5, 22.7, 24.0,
         25.1, 26.3, 27.6, 28.9, 30.1, 31.4, 32.7, 34.0, 35.2, 36.5,
     };
-    const close_data = [_]f64{
+    const closes = [_]f64{
         14.0, 16.0, 17.2, 18.7, 19.9, 21.5, 22.6, 23.9, 25.0, 26.8,
         27.7, 29.1, 30.5, 31.8, 33.2, 34.7, 36.0, 37.3, 38.7, 40.0,
     };
 
-    try df.addColumnWithData("high", &high_data);
-    try df.addColumnWithData("low", &low_data);
-    try df.addColumnWithData("close", &close_data);
-
     {
-        const result = try Stoch(&df, 5, 3, 3, gpa);
+        const result = try Stoch(&highs, &lows, &closes, 5, 3, 3, gpa);
         defer gpa.free(result[0]);
         defer gpa.free(result[1]);
 
@@ -145,7 +137,7 @@ test "Stoch calculation works with bigger dataset" {
     }
 
     {
-        const result = try Stoch(&df, 8, 3, 3, gpa);
+        const result = try Stoch(&highs, &lows, &closes, 8, 3, 3, gpa);
         defer gpa.free(result[0]);
         defer gpa.free(result[1]);
 
