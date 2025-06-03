@@ -27,6 +27,7 @@ const IsZero = @import("./utils.zig").IsZero;
 ///   const rsi = try Rsi(closes, 14, allocator);
 pub fn Rsi(closes: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, closes.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     if (inTimePeriod < 2) {

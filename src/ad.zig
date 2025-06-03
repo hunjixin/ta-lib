@@ -11,6 +11,7 @@ pub fn Ad(high: []const f64, low: []const f64, close: []const f64, volume: []con
     }
 
     var ads = try allocator.alloc(f64, high.len);
+    errdefer allocator.free(ads);
     var ad: f64 = 0.0;
 
     for (0..close.len) |i| {

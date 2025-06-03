@@ -10,6 +10,7 @@ pub fn AroonOsc(
     if (len != inLow.len) return error.InvalidInput;
 
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     const startIdx: usize = inTimePeriod;

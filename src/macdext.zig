@@ -61,8 +61,11 @@ pub fn MacdExt(
 
     // Allocate output arrays
     const outMACD = try allocator.alloc(f64, inReal.len);
+    errdefer allocator.free(outMACD);
     const outMACDSignal = try allocator.alloc(f64, inReal.len);
+    errdefer allocator.free(outMACDSignal);
     const outMACDHist = try allocator.alloc(f64, inReal.len);
+    errdefer allocator.free(outMACDHist);
     @memset(outMACD, 0);
     @memset(outMACDSignal, 0);
     @memset(outMACDHist, 0);

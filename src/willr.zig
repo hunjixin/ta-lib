@@ -4,6 +4,7 @@ const IsZero = @import("./utils.zig").IsZero;
 pub fn WillR(high: []const f64, low: []const f64, close: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = high.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     for (inTimePeriod - 1..len) |i| {

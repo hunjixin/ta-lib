@@ -27,6 +27,7 @@ pub fn HtTrendLine(prices: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const max_idx_smooth_price = 49;
 
     var out = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     var detrender_odd: [3]f64 = .{0} ** 3;

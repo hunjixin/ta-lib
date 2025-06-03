@@ -15,6 +15,7 @@ const MyError = @import("./lib.zig").MyError;
 /// Returns a newly allocated array of midpoint values, or an error if allocation fails.
 pub fn MidPoint(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     const loopback = period - 1;

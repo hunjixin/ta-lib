@@ -26,8 +26,10 @@ pub fn StochRsi(
     defer allocator.free(tempk);
 
     var outFastK = try allocator.alloc(f64, len);
+    errdefer allocator.free(outFastK);
     @memset(outFastK, 0);
     var outFastD = try allocator.alloc(f64, len);
+    errdefer allocator.free(outFastD);
     @memset(outFastD, 0);
     for (startIdx..len) |i| {
         outFastK[i] = tempk[i];

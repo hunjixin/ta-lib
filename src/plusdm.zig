@@ -21,6 +21,7 @@ const MyError = @import("./lib.zig").MyError;
 pub fn PlusDM(inHigh: []const f64, inLow: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var outReal = try allocator.alloc(f64, len);
+    errdefer allocator.free(outReal);
     if (len == 0) return outReal;
 
     const inTimePeriodF: f64 = @floatFromInt(inTimePeriod);

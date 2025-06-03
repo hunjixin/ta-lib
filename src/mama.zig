@@ -17,7 +17,9 @@ pub fn Mama(prices: []const f64, inFastLimit: f64, inSlowLimit: f64, allocator: 
     if (prices.len == 0) return error.InvalidInput;
 
     var outMAMA = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(outMAMA);
     var outFAMA = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(outFAMA);
 
     const a = 0.0962;
     const b = 0.5769;

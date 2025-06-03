@@ -62,6 +62,7 @@ const math = std.math;
 pub fn HtDcPhase(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const len = inReal.len;
     var outReal = try allocator.alloc(f64, len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     const a: f64 = 0.0962;

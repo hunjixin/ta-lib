@@ -20,6 +20,7 @@ const MyError = @import("./lib.zig").MyError;
 pub fn Kama(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     const const_max = 2.0 / (30.0 + 1.0);

@@ -50,7 +50,9 @@ pub fn StochF(
     const len = close.len;
 
     var outFastK = try allocator.alloc(f64, len);
+    errdefer allocator.free(outFastK);
     var outFastD = try allocator.alloc(f64, len);
+    errdefer allocator.free(outFastD);
     @memset(outFastK, 0);
     @memset(outFastD, 0);
 

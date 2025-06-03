@@ -41,6 +41,7 @@ pub fn Mavp(prices: []const f64, inPeriods: []const usize, inMinPeriod: usize, i
     const outputSize = prices.len;
 
     var outReal = try allocator.alloc(f64, outputSize);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     var localPeriodArray = try allocator.alloc(usize, outputSize);

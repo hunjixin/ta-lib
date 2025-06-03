@@ -18,6 +18,7 @@ const MyError = @import("./lib.zig").MyError;
 pub fn MidPrice(inHigh: []const f64, inLow: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
     const loopback = period - 1;
 

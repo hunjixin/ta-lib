@@ -36,8 +36,11 @@ const Ma = @import("./lib.zig").Ma;
 ///   const result = try Bbands(prices, 20, 2.0, 2.0, allocator);
 pub fn Bbands(prices: []const f64, inTimePeriod: usize, inNbDevUp: f64, inNbDevDn: f64, maType: MaType, allocator: std.mem.Allocator) !struct { []f64, []f64, []f64 } {
     var upper_band = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(upper_band);
     const middle_band = try Ma(prices, inTimePeriod, maType, allocator);
+    errdefer allocator.free(middle_band);
     var lower_band = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(lower_band);
     const stddev = try StdDev(prices, inTimePeriod, 1.0, allocator);
     defer allocator.free(stddev);
 

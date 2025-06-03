@@ -20,6 +20,7 @@ const Ema = @import("./lib.zig").Ema;
 /// - Returns an error if memory allocation fails or if the input is invalid.
 pub fn Dema(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     const firstEMA = try Ema(prices, period, allocator);

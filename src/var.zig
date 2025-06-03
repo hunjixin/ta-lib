@@ -21,6 +21,7 @@ const std = @import("std");
 /// - Returns an error if allocation fails or if the input is invalid.
 pub fn Var(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     if (period == 0 or prices.len < period) return out;

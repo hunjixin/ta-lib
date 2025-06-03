@@ -36,6 +36,7 @@ pub fn Rocp(
     allocator: std.mem.Allocator,
 ) ![]f64 {
     var outReal = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     if (inTimePeriod < 1) {

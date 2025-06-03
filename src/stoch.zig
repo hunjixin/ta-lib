@@ -50,7 +50,9 @@ pub fn Stoch(
     const len = close.len;
 
     var outSlowK = try allocator.alloc(f64, len);
+    errdefer allocator.free(outSlowK);
     var outSlowD = try allocator.alloc(f64, len);
+    errdefer allocator.free(outSlowD);
     @memset(outSlowK, 0);
     @memset(outSlowD, 0);
 

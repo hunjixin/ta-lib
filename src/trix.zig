@@ -13,6 +13,7 @@ pub fn Trix(prices: []const f64, inTimePeriod: usize, allocator: std.mem.Allocat
     defer allocator.free(tmpReal4);
 
     var outReal = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
     var i: usize = inTimePeriod;
     var j: usize = (inTimePeriod - 1) * 3 + 1;

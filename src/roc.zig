@@ -2,6 +2,7 @@ const std = @import("std");
 
 pub fn Roc(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     var outReal = try allocator.alloc(f64, inReal.len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     var outIdx: usize = inTimePeriod;

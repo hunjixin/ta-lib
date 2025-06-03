@@ -28,6 +28,7 @@ const MinusDm = @import("./lib.zig").MinusDm;
 pub fn Sar(inHigh: []const f64, inLow: []const f64, inAcceleration: f64, inMaximum: f64, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     var af = inAcceleration;

@@ -77,6 +77,7 @@ pub fn Macd(
 
     // outMACD
     var out_macd = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out_macd);
     for (0..out_macd.len) |i| {
         if (i >= lookback_total - 1) {
             out_macd[i] = fast_ema[i];
@@ -87,9 +88,11 @@ pub fn Macd(
 
     // outMACDSignal
     const out_macd_signal = try Ema(out_macd, inSignalPeriod, allocator);
+    errdefer allocator.free(out_macd_signal);
 
     // outMACDHist
     var out_macd_hist = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out_macd_hist);
     for (0..out_macd_hist.len) |i| {
         if (i >= lookback_total) {
             out_macd_hist[i] = out_macd[i] - out_macd_signal[i];

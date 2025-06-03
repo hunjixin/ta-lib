@@ -44,6 +44,7 @@ pub fn Mfi(high: []const f64, low: []const f64, close: []const f64, volume: []co
     }
 
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     if (inTimePeriod == 0 or inTimePeriod >= len) {

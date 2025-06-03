@@ -25,6 +25,7 @@ const MyError = @import("./lib.zig").MyError;
 pub fn Wma(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     if (period == 1) {

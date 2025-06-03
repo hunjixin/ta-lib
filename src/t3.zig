@@ -14,89 +14,90 @@ pub fn T3(
         return MyError.InvalidInput;
     }
 
-    const lookback_total = 6 * (inTimePeriod - 1);
-    const out_len = prices.len;
-    var out_real = try allocator.alloc(f64, out_len);
-    @memset(out_real, 0);
+    const lookbackTotal = 6 * (inTimePeriod - 1);
+    const outLen = prices.len;
+    var outReal = try allocator.alloc(f64, outLen);
+    errdefer allocator.free(outReal);
+    @memset(outReal, 0);
 
     const k = 2.0 / (@as(f64, @floatFromInt(inTimePeriod)) + 1.0);
-    const one_minus_k = 1.0 - k;
+    const oneMinusK = 1.0 - k;
 
     // Initialize Ema buffers
     var today: usize = 0;
-    var temp_real = prices[today];
+    var tempReal = prices[today];
     today += 1;
     // Calculate first Ema (E1) seed
     var i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
-        temp_real += prices[today];
+        tempReal += prices[today];
         today += 1;
     }
-    var e1 = temp_real / @as(f64, @floatFromInt(inTimePeriod));
-    temp_real = e1;
+    var e1 = tempReal / @as(f64, @floatFromInt(inTimePeriod));
+    tempReal = e1;
     // Calculate E1 for next inTimePeriod-1 values, accumulate for E2 seed
     i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        temp_real += e1;
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        tempReal += e1;
         today += 1;
     }
-    var e2 = temp_real / @as(f64, @floatFromInt(inTimePeriod));
-    temp_real = e2;
+    var e2 = tempReal / @as(f64, @floatFromInt(inTimePeriod));
+    tempReal = e2;
     // Calculate E2 for next inTimePeriod-1 values, accumulate for E3 seed
     i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        e2 = (k * e1) + (one_minus_k * e2);
-        temp_real += e2;
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        e2 = (k * e1) + (oneMinusK * e2);
+        tempReal += e2;
         today += 1;
     }
-    var e3 = temp_real / @as(f64, @floatFromInt(inTimePeriod));
-    temp_real = e3;
+    var e3 = tempReal / @as(f64, @floatFromInt(inTimePeriod));
+    tempReal = e3;
     // Calculate E3 for next inTimePeriod-1 values, accumulate for E4 seed
     i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        e2 = (k * e1) + (one_minus_k * e2);
-        e3 = (k * e2) + (one_minus_k * e3);
-        temp_real += e3;
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        e2 = (k * e1) + (oneMinusK * e2);
+        e3 = (k * e2) + (oneMinusK * e3);
+        tempReal += e3;
         today += 1;
     }
-    var e4 = temp_real / @as(f64, @floatFromInt(inTimePeriod));
-    temp_real = e4;
+    var e4 = tempReal / @as(f64, @floatFromInt(inTimePeriod));
+    tempReal = e4;
     // Calculate E4 for next inTimePeriod-1 values, accumulate for E5 seed
     i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        e2 = (k * e1) + (one_minus_k * e2);
-        e3 = (k * e2) + (one_minus_k * e3);
-        e4 = (k * e3) + (one_minus_k * e4);
-        temp_real += e4;
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        e2 = (k * e1) + (oneMinusK * e2);
+        e3 = (k * e2) + (oneMinusK * e3);
+        e4 = (k * e3) + (oneMinusK * e4);
+        tempReal += e4;
         today += 1;
     }
-    var e5 = temp_real / @as(f64, @floatFromInt(inTimePeriod));
-    temp_real = e5;
+    var e5 = tempReal / @as(f64, @floatFromInt(inTimePeriod));
+    tempReal = e5;
     // Calculate E5 for next inTimePeriod-1 values, accumulate for E6 seed
     i = inTimePeriod - 1;
     while (i > 0) : (i -= 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        e2 = (k * e1) + (one_minus_k * e2);
-        e3 = (k * e2) + (one_minus_k * e3);
-        e4 = (k * e3) + (one_minus_k * e4);
-        e5 = (k * e4) + (one_minus_k * e5);
-        temp_real += e5;
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        e2 = (k * e1) + (oneMinusK * e2);
+        e3 = (k * e2) + (oneMinusK * e3);
+        e4 = (k * e3) + (oneMinusK * e4);
+        e5 = (k * e4) + (oneMinusK * e5);
+        tempReal += e5;
         today += 1;
     }
-    var e6 = temp_real / @as(f64, @floatFromInt(inTimePeriod));
+    var e6 = tempReal / @as(f64, @floatFromInt(inTimePeriod));
 
     // Advance E1..E6 to the start index
-    while (today <= lookback_total) : (today += 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        e2 = (k * e1) + (one_minus_k * e2);
-        e3 = (k * e2) + (one_minus_k * e3);
-        e4 = (k * e3) + (one_minus_k * e4);
-        e5 = (k * e4) + (one_minus_k * e5);
-        e6 = (k * e5) + (one_minus_k * e6);
+    while (today <= lookbackTotal) : (today += 1) {
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        e2 = (k * e1) + (oneMinusK * e2);
+        e3 = (k * e2) + (oneMinusK * e3);
+        e4 = (k * e3) + (oneMinusK * e4);
+        e5 = (k * e4) + (oneMinusK * e5);
+        e6 = (k * e5) + (oneMinusK * e6);
     }
 
     // Calculate T3 coefficients
@@ -107,25 +108,25 @@ pub fn T3(
     const c3 = -6.0 * v2 - 3.0 * (v - c1);
     const c4 = 1.0 + 3.0 * v - c1 + 3.0 * v2;
 
-    var out_idx = lookback_total;
-    if (out_idx < out_real.len)
-        out_real[out_idx] = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3;
+    var out_idx = lookbackTotal;
+    if (out_idx < outReal.len)
+        outReal[out_idx] = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3;
     out_idx += 1;
 
     // Main loop: calculate T3 for each price after lookback
     while (today < prices.len) : (today += 1) {
-        e1 = (k * prices[today]) + (one_minus_k * e1);
-        e2 = (k * e1) + (one_minus_k * e2);
-        e3 = (k * e2) + (one_minus_k * e3);
-        e4 = (k * e3) + (one_minus_k * e4);
-        e5 = (k * e4) + (one_minus_k * e5);
-        e6 = (k * e5) + (one_minus_k * e6);
-        if (out_idx < out_real.len)
-            out_real[out_idx] = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3;
+        e1 = (k * prices[today]) + (oneMinusK * e1);
+        e2 = (k * e1) + (oneMinusK * e2);
+        e3 = (k * e2) + (oneMinusK * e3);
+        e4 = (k * e3) + (oneMinusK * e4);
+        e5 = (k * e4) + (oneMinusK * e5);
+        e6 = (k * e5) + (oneMinusK * e6);
+        if (out_idx < outReal.len)
+            outReal[out_idx] = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3;
         out_idx += 1;
     }
 
-    return out_real;
+    return outReal;
 }
 
 test "T3 calculation with valid input" {

@@ -44,6 +44,7 @@ pub fn AdOsc(
     const slowest_period = if (fast_period > slow_period) fast_period else slow_period;
     const lookback_total = slowest_period - 1;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
 
     var ad: f64 = 0.0;

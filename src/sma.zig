@@ -21,6 +21,7 @@ const std = @import("std");
 /// - For indices less than period-1, the output will be zero (not enough data to compute Sma).
 pub fn Sma(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
     var da: f64 = 0.0;
     const dived: f64 = @floatFromInt(period);

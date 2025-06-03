@@ -28,6 +28,7 @@ const MyError = @import("./lib.zig").MyError;
 pub fn Trima(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = prices.len;
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0);
     if (period < 1 or period > len) {
         return MyError.InvalidInput;

@@ -61,7 +61,7 @@ pub fn Ppo(
     const tempBuffer = try Ma(prices, fastPeriod, maType, allocator);
     defer allocator.free(tempBuffer);
     var outReal = try Ma(prices, slowPeriod, maType, allocator);
-
+    errdefer allocator.free(outReal);
     for (slowPeriod - 1..prices.len) |i| {
         const tempReal = outReal[i];
         if (!IsZero(tempReal)) {

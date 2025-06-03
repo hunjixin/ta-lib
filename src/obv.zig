@@ -5,6 +5,7 @@ pub fn Obv(close: []const f64, volume: []const f64, allocator: std.mem.Allocator
     if (close.len != volume.len) return MyError.RowColumnMismatch;
 
     var obvCol = try allocator.alloc(f64, close.len);
+    errdefer allocator.free(obvCol);
     var obv: f64 = 0.0;
 
     obvCol[0] = 0.0;

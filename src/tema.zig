@@ -38,6 +38,7 @@ pub fn Tema(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![
 
     const out_len = prices.len;
     var outReal = try allocator.alloc(f64, out_len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     const outIdx: usize = period * 3 - 3;

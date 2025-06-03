@@ -23,6 +23,7 @@ pub fn Bop(open: []const f64, high: []const f64, low: []const f64, close: []cons
     }
 
     var outs = try allocator.alloc(f64, high.len);
+    errdefer allocator.free(outs);
     for (0..close.len) |i| {
         const range = high[i] - low[i];
         outs[i] = if (range > 0.00000000000001) (close[i] - open[i]) / range else 0.0;

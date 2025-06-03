@@ -3,6 +3,7 @@ const MyError = @import("./lib.zig").MyError;
 
 pub fn Mom(prices: []const f64, period: usize, allocator: std.mem.Allocator) ![]f64 {
     var out = try allocator.alloc(f64, prices.len);
+    errdefer allocator.free(out);
     @memset(out, 0);
     if (prices.len < period) {
         return out;

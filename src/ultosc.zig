@@ -23,6 +23,7 @@ pub fn UltOsc(
     if (lookback >= len) return error.NotEnoughData;
 
     var out = try allocator.alloc(f64, len);
+    errdefer allocator.free(out);
     @memset(out, 0.0);
 
     var a1_total: f64 = 0;

@@ -42,6 +42,7 @@ pub fn Atr(
 ) ![]f64 {
     const len = inHigh.len;
     var outReal = try allocator.alloc(f64, len);
+    errdefer allocator.free(outReal);
     @memset(outReal, 0);
 
     const inTimePeriodF: f64 = @floatFromInt(inTimePeriod);
