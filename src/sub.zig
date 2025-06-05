@@ -36,7 +36,7 @@ const math = std.math;
 /// Output:
 /// result = [5.0-2.0, 7.0-3.0, 10.0-6.0] = [3.0, 4.0, 4.0]
 /// ```
-fn Sub(inReal1: []const f64, inReal2: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Sub(inReal1: []const f64, inReal2: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal1.len);
     errdefer allocator.free(outReal);
 

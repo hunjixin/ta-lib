@@ -20,7 +20,7 @@ const math = std.math;
 /// Example:
 /// - Input:  [0.0, 1.0, -1.0]
 /// - Output: [0.0, 1.1752011936438014, -1.1752011936438014]
-fn Sinh(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Sinh(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

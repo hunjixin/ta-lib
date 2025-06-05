@@ -27,7 +27,7 @@ const math = std.math;
 /// inTimePeriod = 3
 /// Output       = [0, 0, 2.0, 1.0, 1.0]
 /// ```
-fn Min(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn Min(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
     @memset(outReal, 0);

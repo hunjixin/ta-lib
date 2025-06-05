@@ -6,17 +6,17 @@ pub fn Obv(close: []const f64, volume: []const f64, allocator: std.mem.Allocator
 
     var obvCol = try allocator.alloc(f64, close.len);
     errdefer allocator.free(obvCol);
-    var obv: f64 = 0.0;
 
-    obvCol[0] = 0.0;
-
-    for (1..close.len) |i| {
-        if (close[i] > close[i - 1]) {
-            obv += volume[i];
-        } else if (close[i] < close[i - 1]) {
-            obv -= volume[i];
+    var prevOBV = volume[0];
+    var prevReal = close[0];
+    for (0..close.len) |i| {
+        if (close[i] > prevReal) {
+            prevOBV += volume[i];
+        } else if (close[i] < prevReal) {
+            prevOBV -= volume[i];
         }
-        obvCol[i] = obv;
+        obvCol[i] = prevOBV;
+        prevReal = close[i];
     }
 
     return obvCol;
@@ -32,7 +32,7 @@ test "Obv calculation" {
     defer gpa.free(obvCol);
 
     // Verify Obv values
-    const expected = [_]f64{ 0.0, 1500.0, 300.0, 2100.0, 500.0 };
+    const expected = [_]f64{ 1000, 2500, 1300, 3100, 1500 };
     for (expected, 0..) |val, i| {
         try std.testing.expectApproxEqAbs(val, obvCol[i], 1e-9);
     }

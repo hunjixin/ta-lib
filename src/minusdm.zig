@@ -21,7 +21,7 @@ const MyError = @import("./lib.zig").MyError;
 ///
 /// Errors:
 /// - Returns an error if memory allocation fails or if input data is invalid.
-pub fn MinusDm(inHigh: []const f64, inLow: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn MinusDM(inHigh: []const f64, inLow: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const len = inHigh.len;
     var outReal = try allocator.alloc(f64, len);
     errdefer allocator.free(outReal);
@@ -105,7 +105,7 @@ test "MinusDm calculation with valid input" {
     const highs = [_]f64{ 10, 12, 11, 13, 13, 14, 13, 15, 14, 100, 17, 16, 18, 17, 19 };
     const lows = [_]f64{ 8, 9, 9, 10, 12, 12, 12, 13, 13, 14, 100, 15, 16, 16, 17 };
 
-    const result = try MinusDm(&highs, &lows, 4, allocator);
+    const result = try MinusDM(&highs, &lows, 4, allocator);
     defer allocator.free(result);
 
     try std.testing.expectEqual(result.len, highs.len);

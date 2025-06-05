@@ -29,7 +29,7 @@ const math = std.math;
 /// - Modeling exponential growth or decay
 /// - Compounding interest calculations
 /// - Solving differential equations
-fn Exp(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Exp(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

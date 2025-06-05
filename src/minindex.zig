@@ -37,7 +37,7 @@ const math = std.math;
 /// - At i=3: window = [1.0, 4.0, 2.0] → min=1.0 at index 1
 /// - At i=4: window = [4.0, 2.0, 5.0] → min=2.0 at index 3
 /// ```
-fn MinIndex(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn MinIndex(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
     @memset(outReal, 0);

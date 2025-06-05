@@ -1,6 +1,6 @@
 const std = @import("std");
 const MyError = @import("./lib.zig").MyError;
-const MinusDm = @import("./lib.zig").MinusDm;
+const MinusDM = @import("./lib.zig").MinusDM;
 
 /// Calculates the Parabolic Sar (Stop and Reverse) indicator for a given DataFrame of f64 values.
 ///
@@ -36,7 +36,7 @@ pub fn Sar(inHigh: []const f64, inLow: []const f64, inAcceleration: f64, inMaxim
         af = inMaximum;
     }
 
-    const epTemp = try MinusDm(inHigh, inLow, 1, allocator);
+    const epTemp = try MinusDM(inHigh, inLow, 1, allocator);
     var isLong: i32 = 1;
     if (epTemp.len > 1 and epTemp[1] > 0) {
         isLong = 0;

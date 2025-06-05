@@ -21,7 +21,7 @@ const math = std.math;
 ///
 /// Usage:
 /// Useful in signal processing, trigonometric transformations, or phase analysis.
-fn Atan(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Atan(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

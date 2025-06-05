@@ -34,7 +34,7 @@ const Ma = @import("./lib.zig").Ma;
 ///
 /// Example usage:
 ///   const result = try Bbands(prices, 20, 2.0, 2.0, allocator);
-pub fn Bbands(prices: []const f64, inTimePeriod: usize, inNbDevUp: f64, inNbDevDn: f64, maType: MaType, allocator: std.mem.Allocator) !struct { []f64, []f64, []f64 } {
+pub fn BBands(prices: []const f64, inTimePeriod: usize, inNbDevUp: f64, inNbDevDn: f64, maType: MaType, allocator: std.mem.Allocator) !struct { []f64, []f64, []f64 } {
     var upper_band = try allocator.alloc(f64, prices.len);
     errdefer allocator.free(upper_band);
     const middle_band = try Ma(prices, inTimePeriod, maType, allocator);
@@ -83,7 +83,7 @@ test "Bbands work correctly" {
     const period = 5;
 
     {
-        const upper, const middle, const down = try Bbands(prices[0..], period, 1, 1, MaType.SMA, allocator);
+        const upper, const middle, const down = try BBands(prices[0..], period, 1, 1, MaType.SMA, allocator);
         defer allocator.free(upper);
         defer allocator.free(middle);
         defer allocator.free(down);
@@ -110,7 +110,7 @@ test "Bbands work correctly" {
     }
 
     {
-        const upper, const middle, const down = try Bbands(prices[0..], period, 2, 3, MaType.SMA, allocator);
+        const upper, const middle, const down = try BBands(prices[0..], period, 2, 3, MaType.SMA, allocator);
         defer allocator.free(upper);
         defer allocator.free(middle);
         defer allocator.free(down);

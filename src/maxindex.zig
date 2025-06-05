@@ -33,7 +33,7 @@ const math = std.math;
 /// - At i=3: window = [3.0, 2.0, 5.0] → max=5.0 at index 3
 /// - At i=4: window = [2.0, 5.0, 4.0] → max=5.0 at index 3
 /// ```
-fn MaxIndex(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn MaxIndex(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
     @memset(outReal, 0);

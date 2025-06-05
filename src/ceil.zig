@@ -23,7 +23,7 @@ const math = std.math;
 /// Usage:
 /// Often used when rounding up values is needed, such as in financial modeling,
 /// order size rounding, or time intervals.
-fn Ceil(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Ceil(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

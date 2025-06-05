@@ -23,7 +23,7 @@ const math = std.math;
 /// Example:
 /// - Input:  [0.0, π/4, π/2]
 /// - Output: [0.0, 1.0, large value (or ±∞)]
-fn Tan(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Tan(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

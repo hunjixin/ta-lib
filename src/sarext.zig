@@ -49,7 +49,7 @@ const math = std.math;
 /// ```text
 /// let result = try SarExt(highs, lows, 0.02, 0.0, 0.02, 0.02, 0.2, 0.02, 0.02, 0.2, allocator);
 /// ```
-fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOnReverse: f64, inAccelerationInitLong: f64, inAccelerationLongF: f64, inAccelerationMaxLong: f64, inAccelerationInitShort: f64, inAccelerationShortF: f64, inAccelerationMaxShort: f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn SarExt(inHigh: []const f64, inLow: []const f64, inStartValue: f64, inOffsetOnReverse: f64, inAccelerationInitLong: f64, inAccelerationLongF: f64, inAccelerationMaxLong: f64, inAccelerationInitShort: f64, inAccelerationShortF: f64, inAccelerationMaxShort: f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inHigh.len);
     errdefer allocator.free(outReal);
 

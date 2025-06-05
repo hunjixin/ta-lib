@@ -29,7 +29,7 @@ const math = std.math;
 /// Usage:
 /// - Common in solving certain differential equations
 /// - Describes energy functions in physics and neural networks
-fn Cosh(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Cosh(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

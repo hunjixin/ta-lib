@@ -13,7 +13,7 @@ const math = std.math;
 /// Returns:
 /// - A slice of f64 values, each being the result of acos(input[i])
 /// - Returns `error.InputOutOfDomain` if any input is outside [-1, 1]
-fn Acos(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Acos(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

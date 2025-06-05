@@ -45,7 +45,7 @@ const std = @import("std");
 /// - At i=3: window = [1.0, 4.0, 2.0] → min=1.0, max=4.0
 /// - At i=4: window = [4.0, 2.0, 5.0] → min=2.0, max=5.0
 /// ```
-fn MinMax(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) !struct { []f64, []f64 } {
+pub fn MinMax(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) !struct { []f64, []f64 } {
     // Allocate output arrays
     const outMin = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outMin);

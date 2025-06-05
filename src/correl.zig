@@ -1,109 +1,133 @@
 const std = @import("std");
 const math = std.math;
 
-pub fn Correl(inReal0: []const f64, inReal1: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+/// Calculates the Pearson Correlation Coefficient (CORREL) between two time series.
+///
+/// CORREL is a statistical measure that describes the degree to which two variables move in relation to each other.
+/// The output values range from -1.0 to 1.0:
+/// - `+1.0` indicates perfect positive correlation,
+/// - `0.0` indicates no correlation,
+/// - `-1.0` indicates perfect negative correlation.
+///
+/// The Pearson correlation coefficient is calculated using the following formula:
+///
+/// ```text
+/// CORREL = Σ[(Xᵢ - mean(X)) * (Yᵢ - mean(Y))] / (n * stddev(X) * stddev(Y))
+/// ```
+///
+/// Where:
+/// - `X` and `Y` are the two input arrays,
+/// - `n` is the time period (`inTimePeriod`),
+/// - `mean(X)` and `mean(Y)` are the averages of the last `n` values,
+/// - `stddev(X)` and `stddev(Y)` are the standard deviations over the last `n` values.
+///
+/// This function returns a slice of correlation values, aligned with the end of the input slices (the first `inTimePeriod - 1` values may be zero or omitted depending on implementation).
+///
+/// # Parameters
+/// - `inReal0`: The first input time series (X values).
+/// - `inReal1`: The second input time series (Y values).
+/// - `inTimePeriod`: The number of periods to use in the correlation calculation (must be ≥ 1).
+/// - `allocator`: Memory allocator used to allocate the result array.
+///
+/// # Returns
+/// - An array of `f64` values representing the correlation coefficients between `inReal0` and `inReal1` over the specified time period.
+///
+/// # Errors
+/// - Returns an error if memory allocation fails or if input arrays are too short.
+///
+/// # Example
+/// ```zig
+/// const result = try Correl(open_prices, close_prices, 10, allocator);
+/// ```
+pub fn Correl(
+    inReal0: []const f64,
+    inReal1: []const f64,
+    inTimePeriod: usize,
+    allocator: std.mem.Allocator,
+) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal0.len);
     errdefer allocator.free(outReal);
-    @memset(outReal, 0.0);
+    @memset(outReal, 0);
 
-    var x: f64 = 0.0;
-    var y: f64 = 0.0;
-    var sSS: f64 = 0.0;
-    var sXY: f64 = 0.0;
-    var sX: f64 = 0.0;
-    var sY: f64 = 0.0;
-    var tmpReal: f64 = 0.0;
-    var n: f64 = 0.0;
+    if (inTimePeriod == 0) return outReal;
 
-    const startIdx = inTimePeriod;
-    var trailingIdx: usize = 0;
+    const inTimePeriodF: f64 = @floatFromInt(inTimePeriod);
+    const lookbackTotal = inTimePeriod - 1;
+    const startIdx = lookbackTotal;
+    var trailingIdx: usize = startIdx - lookbackTotal;
 
-    var trailingLastPriceX: f64 = inReal0[trailingIdx];
-    var lastPriceX: f64 = trailingLastPriceX;
-    var trailingLastPriceY: f64 = inReal1[trailingIdx];
-    var lastPriceY: f64 = trailingLastPriceY;
+    var sumXY: f64 = 0.0;
+    var sumX: f64 = 0.0;
+    var sumY: f64 = 0.0;
+    var sumX2: f64 = 0.0;
+    var sumY2: f64 = 0.0;
 
+    // Initial window calculation
+    var today: usize = trailingIdx;
+    while (today <= startIdx) : (today += 1) {
+        const x = inReal0[today];
+        sumX += x;
+        sumX2 += x * x;
+
+        const y = inReal1[today];
+        sumXY += x * y;
+        sumY += y;
+        sumY2 += y * y;
+    }
+
+    var trailingX = inReal0[trailingIdx];
+    var trailingY = inReal1[trailingIdx];
     trailingIdx += 1;
-    var i: usize = trailingIdx;
 
-    // Initial calculation
-    while (i < startIdx) {
-        tmpReal = inReal0[i];
-        x = 0.0;
-        if (!(lastPriceX > -0.00000000000001 and lastPriceX < 0.00000000000001)) {
-            x = (tmpReal - lastPriceX) / lastPriceX;
-        }
-        lastPriceX = tmpReal;
+    const tempReal = (sumX2 - (sumX * sumX) / inTimePeriodF) *
+        (sumY2 - (sumY * sumY) / inTimePeriodF);
 
-        tmpReal = inReal1[i];
-        i += 1;
-
-        y = 0.0;
-        if (!(lastPriceY > -0.00000000000001 and lastPriceY < 0.00000000000001)) {
-            y = (tmpReal - lastPriceY) / lastPriceY;
-        }
-        lastPriceY = tmpReal;
-
-        sSS += x * x;
-        sXY += x * y;
-        sX += x;
-        sY += y;
+    if (tempReal >= 1e-14) {
+        outReal[inTimePeriod - 1] = (sumXY - (sumX * sumY) / inTimePeriodF) /
+            math.sqrt(tempReal);
+    } else {
+        outReal[inTimePeriod - 1] = 0.0;
     }
 
     var outIdx: usize = inTimePeriod;
-    n = @floatFromInt(inTimePeriod);
+    today = startIdx + 1;
 
-    // Main calculation loop
-    while (i < inReal0.len) {
-        tmpReal = inReal0[i];
-        x = 0.0;
-        if (!(lastPriceX > -0.00000000000001 and lastPriceX < 0.00000000000001)) {
-            x = (tmpReal - lastPriceX) / lastPriceX;
-        }
-        lastPriceX = tmpReal;
+    // Slide window through remaining data
+    while (today < inReal0.len) {
+        // Remove trailing element
+        sumX -= trailingX;
+        sumX2 -= trailingX * trailingX;
+        sumXY -= trailingX * trailingY;
+        sumY -= trailingY;
+        sumY2 -= trailingY * trailingY;
 
-        tmpReal = inReal1[i];
-        i += 1;
+        // Add new element
+        const x = inReal0[today];
+        sumX += x;
+        sumX2 += x * x;
 
-        y = 0.0;
-        if (!(lastPriceY > -0.00000000000001 and lastPriceY < 0.00000000000001)) {
-            y = (tmpReal - lastPriceY) / lastPriceY;
-        }
-        lastPriceY = tmpReal;
+        const y = inReal1[today];
+        sumXY += x * y;
+        sumY += y;
+        sumY2 += y * y;
+        today += 1;
 
-        sSS += x * x;
-        sXY += x * y;
-        sX += x;
-        sY += y;
-
-        tmpReal = inReal0[trailingIdx];
-        x = 0.0;
-        if (!(trailingLastPriceX > -0.00000000000001 and trailingLastPriceX < 0.00000000000001)) {
-            x = (tmpReal - trailingLastPriceX) / trailingLastPriceX;
-        }
-        trailingLastPriceX = tmpReal;
-
-        tmpReal = inReal1[trailingIdx];
+        // Update trailing values
+        trailingX = inReal0[trailingIdx];
+        trailingY = inReal1[trailingIdx];
         trailingIdx += 1;
 
-        y = 0.0;
-        if (!(trailingLastPriceY > -0.00000000000001 and trailingLastPriceY < 0.00000000000001)) {
-            y = (tmpReal - trailingLastPriceY) / trailingLastPriceY;
-        }
-        trailingLastPriceY = tmpReal;
+        // Calculate new correlation
+        const newTempReal = (sumX2 - (sumX * sumX) / inTimePeriodF) *
+            (sumY2 - (sumY * sumY) / inTimePeriodF);
 
-        tmpReal = (n * sSS) - (sX * sX);
-        if (!(tmpReal > -0.00000000000001 and tmpReal < 0.00000000000001)) {
-            outReal[outIdx] = ((n * sXY) - (sX * sY)) / tmpReal;
+        if (newTempReal >= 1e-14) {
+            outReal[outIdx] = (sumXY - (sumX * sumY) / inTimePeriodF) /
+                math.sqrt(newTempReal);
         } else {
             outReal[outIdx] = 0.0;
         }
         outIdx += 1;
-
-        sSS -= x * x;
-        sXY -= x * y;
-        sX -= x;
-        sY -= y;
     }
 
     return outReal;
@@ -137,7 +161,9 @@ test "Correl work correctly" {
     const result = try Correl(&pricesX, &pricesY, 8, allocator);
     defer allocator.free(result);
 
-    const expected = [_]f64{ 0, 0, 0, 0, 0, 0, 0, 0, 0.09259347454219599, 0.0439512091803773, -0.021563639594289093, 0.12652838963535093, 0.08914532015957691, 0.04096606902413322, -0.023402548624057343, 0.12312176283037145, 0.08589744756263075, 0.03820648682716569, -0.025021694208903347, 0.11987281886433863, 0.8862198895172355, 1.0286043451030666, 1.1085180920684479, 0.8568476089025835, 0.7532200426324772, 0.8340801597587748, 0.9132620452543062, -0.03253196147318418, -0.2809207874078762, -0.19258358376305545, 0.6262844944783474, 0.7799414330289097, 0.9212516617619846, 0.47892800785120887, 0.1562965846218287, 0.5177001412451042, 1.109836822860035, 1.3269268162678236, 2.3782539910704417, 0.0867291169276316 };
+    const expected = [_]f64{
+        0, 0, 0, 0, 0, 0, 0, 0.9998769457943636, 0.9998857077547629, 0.999876945794364, 0.999907062333283, 0.9998769457943638, 0.9998857077547425, 0.9998769457943638, 0.9999070623329991, 0.9998769457940748, 0.9998857077544518, 0.9998769457943453, 0.9999070623327285, 0.9998769457937858, 0.999811948750424, 0.9959118811001992, 0.957790367129341, 0.9168429229636496, 0.6682451204677108, 0.6663217446775035, 0.7552446622628334, 0.5840865416420954, 0.09914149879728491, 0.11015155896811742, 0.3519947347128376, 0.3305899427152212, 0.28497176753885956, 0.5168648283985527, 0.6135219375512222, 0.65688428184443, 0.746494549671532, 0.7316334252114167, 0.6555985729665037, 0.45178812249199485,
+    };
     for (result, 0..) |v, i| {
         try std.testing.expectApproxEqAbs(expected[i], v, 1e-9);
     }

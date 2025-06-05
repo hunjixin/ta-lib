@@ -38,7 +38,7 @@ const math = std.math;
 /// Output:
 /// result = [0.0, 0.0, 6.0, 9.0, 12.0] // First 2 values may be set to 0.0
 /// ```
-fn Sum(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn Sum(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
     @memset(outReal, 0);

@@ -21,7 +21,7 @@ const math = std.math;
 /// Example:
 /// - Input: inReal1 = [10.0, 20.0, 30.0], inReal2 = [2.0, 5.0, 6.0]
 /// - Output: [5.0, 4.0, 5.0]
-fn Div(inReal1: []const f64, inReal2: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Div(inReal1: []const f64, inReal2: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal1.len);
     errdefer allocator.free(outReal);
 

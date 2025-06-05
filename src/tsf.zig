@@ -1,7 +1,7 @@
 const std = @import("std");
 const math = std.math;
 
-fn Tsf(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
+pub fn Tsf(inReal: []const f64, inTimePeriod: usize, allocator: std.mem.Allocator) ![]f64 {
     var outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

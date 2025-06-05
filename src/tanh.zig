@@ -20,7 +20,7 @@ const math = std.math;
 /// Example:
 /// - Input:  [-2.0, 0.0, 2.0]
 /// - Output: [-0.964, 0.0, 0.964]
-fn Tanh(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Tanh(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

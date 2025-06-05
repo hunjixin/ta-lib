@@ -20,7 +20,7 @@ const math = std.math;
 /// Example:
 /// - Input: inReal1 = [1.0, 2.0, 3.0], inReal2 = [4.0, 5.0, 6.0]
 /// - Output: [5.0, 7.0, 9.0]
-fn Add(inReal1: []const f64, inReal2: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Add(inReal1: []const f64, inReal2: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal1.len);
     errdefer allocator.free(outReal);
 

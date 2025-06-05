@@ -41,6 +41,20 @@ pub fn build(b: *std.Build) !void {
         .error_tracing = true,
     });
 
+    var integratestModule = b.createModule(.{
+        .root_source_file = b.path("tests/main.zig"),
+        .target = target,
+        .optimize = optimize,
+        .error_tracing = true,
+    });
+
+    integratestModule.addImport("ta_lib", libModule);
+    const integratestCompiled = b.addExecutable(.{ .name = "integratest", .root_module = integratestModule });
+    const integratestRun = b.addRunArtifact(integratestCompiled);
+    const installStep = b.addInstallArtifact(integratestCompiled, .{});
+    runTests.dependOn(&installStep.step);
+    runTests.dependOn(&integratestRun.step);
+
     //run examples
     var exampleDir = cwd.openDir("examples", .{ .iterate = true }) catch {
         std.log.err("⚠️ cannot open 'examples/'", .{});

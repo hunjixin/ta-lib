@@ -1,5 +1,5 @@
 const std = @import("std");
-const Trange = @import("lib.zig").Trange;
+const TRange = @import("lib.zig").TRange;
 const Sma = @import("lib.zig").Sma;
 
 /// Calculates the Average True Range (ATR) indicator.
@@ -52,11 +52,11 @@ pub fn Atr(
     }
 
     if (inTimePeriod <= 1) {
-        return Trange(inHigh, inLow, inClose, allocator);
+        return TRange(inHigh, inLow, inClose, allocator);
     }
 
     var today = inTimePeriod + 1;
-    const tr = try Trange(inHigh, inLow, inClose, allocator);
+    const tr = try TRange(inHigh, inLow, inClose, allocator);
     defer allocator.free(tr);
     const prevATRTemp = try Sma(tr, inTimePeriod, allocator);
     defer allocator.free(prevATRTemp);

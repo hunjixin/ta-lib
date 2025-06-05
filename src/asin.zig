@@ -18,7 +18,7 @@ const math = std.math;
 /// - asin(x) is the inverse of sin(x).
 /// - Domain:    x ∈ [-1, 1]
 /// - Range:     asin(x) ∈ [-π/2, π/2]
-fn Asin(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Asin(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

@@ -26,7 +26,7 @@ const math = std.math;
 /// Usage:
 /// Used in signal processing, cyclic pattern recognition, Fourier transforms,
 /// and many mathematical or physical models.
-fn Cos(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Cos(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

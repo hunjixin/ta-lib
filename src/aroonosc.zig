@@ -6,69 +6,67 @@ pub fn AroonOsc(
     inTimePeriod: usize,
     allocator: std.mem.Allocator,
 ) ![]f64 {
-    const len = inHigh.len;
-    if (len != inLow.len) return error.InvalidInput;
+    const outReal = try allocator.alloc(f64, inHigh.len);
+    errdefer allocator.free(outReal);
+    @memset(outReal, 0);
 
-    var out = try allocator.alloc(f64, len);
-    errdefer allocator.free(out);
-    @memset(out, 0);
+    if (inTimePeriod == 0) return outReal;
 
-    const startIdx: usize = inTimePeriod;
+    const startIdx = inTimePeriod;
     var outIdx: usize = startIdx;
     var today: usize = startIdx;
     var trailingIdx: usize = startIdx - inTimePeriod;
-    var lowestIdx: usize = 0;
-    var highestIdx: usize = 0;
+    var lowestIdx: i64 = -1;
+    var highestIdx: i64 = -1;
     var lowest: f64 = 0.0;
     var highest: f64 = 0.0;
-    var lowest_valid = false;
-    var highest_valid = false;
-    const factor = 100.0 / @as(f64, @floatFromInt(inTimePeriod));
+    const factor: f64 = 100.0 / @as(f64, @floatFromInt(inTimePeriod));
 
-    while (today < len) {
-        var tmp = inLow[today];
-        if (!lowest_valid or lowestIdx < trailingIdx) {
-            lowestIdx = trailingIdx;
-            lowest = inLow[lowestIdx];
-            var i = trailingIdx + 1;
+    while (today < inHigh.len) {
+        var tmp: f64 = inLow[today];
+
+        if (lowestIdx < @as(i64, @intCast(trailingIdx))) {
+            lowestIdx = @intCast(trailingIdx);
+            lowest = inLow[@intCast(lowestIdx)];
+            var i: usize = @as(usize, @intCast(lowestIdx)) + 1;
             while (i <= today) : (i += 1) {
                 tmp = inLow[i];
                 if (tmp <= lowest) {
-                    lowestIdx = i;
+                    lowestIdx = @intCast(i);
                     lowest = tmp;
                 }
             }
-            lowest_valid = true;
         } else if (tmp <= lowest) {
-            lowestIdx = today;
+            lowestIdx = @intCast(today);
             lowest = tmp;
         }
 
         tmp = inHigh[today];
-        if (!highest_valid or highestIdx < trailingIdx) {
-            highestIdx = trailingIdx;
-            highest = inHigh[highestIdx];
-            var i = trailingIdx + 1;
+        if (highestIdx < @as(i64, @intCast(trailingIdx))) {
+            highestIdx = @intCast(trailingIdx);
+            highest = inHigh[@intCast(highestIdx)];
+            var i: usize = @as(usize, @intCast(highestIdx)) + 1;
             while (i <= today) : (i += 1) {
                 tmp = inHigh[i];
                 if (tmp >= highest) {
-                    highestIdx = i;
+                    highestIdx = @intCast(i);
                     highest = tmp;
                 }
             }
-            highest_valid = true;
         } else if (tmp >= highest) {
-            highestIdx = today;
+            highestIdx = @intCast(today);
             highest = tmp;
         }
 
-        out[outIdx] = factor * @as(f64, @floatFromInt((highestIdx - lowestIdx)));
+        const aroon = factor * @as(f64, @floatFromInt(highestIdx - lowestIdx));
+        outReal[outIdx] = aroon;
+
         outIdx += 1;
         trailingIdx += 1;
         today += 1;
     }
 
-    return out;
+    return outReal;
 }
 
 test "Aroon computes  correctly" {

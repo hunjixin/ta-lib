@@ -26,7 +26,7 @@ const math = std.math;
 /// Example:
 /// - Input:  [1.0, 10.0, 100.0]
 /// - Output: [0.0, 1.0, 2.0]
-fn Log10(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Log10(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 

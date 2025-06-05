@@ -23,7 +23,7 @@ const math = std.math;
 /// Example:
 /// - Input:  [0.0, 4.0, 9.0]
 /// - Output: [0.0, 2.0, 3.0]
-fn Sqrt(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
+pub fn Sqrt(inReal: []const f64, allocator: std.mem.Allocator) ![]f64 {
     const outReal = try allocator.alloc(f64, inReal.len);
     errdefer allocator.free(outReal);
 
