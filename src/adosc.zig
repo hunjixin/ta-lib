@@ -103,12 +103,6 @@ pub fn AdOsc(
         out[outIdx] = fastEMA - slowEMA;
         outIdx += 1;
     }
-
-    // Fill leading values with NaN
-    for (0..lookback_total) |i| {
-        out[i] = std.math.nan(f64);
-    }
-
     return out;
 }
 
@@ -128,7 +122,7 @@ test "AdOsc calculation" {
     defer gpa.free(adosc_values);
 
     // Print AdOsc values
-    for (2..expected_adosc.len) |i| {
+    for (0..expected_adosc.len) |i| {
         try std.testing.expectApproxEqAbs(expected_adosc[i], adosc_values[i], 1e-9);
     }
 }

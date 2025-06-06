@@ -918,13 +918,13 @@ pub fn main() !void {
 
     // test Trix
     {
-        var result = try Trix(&testClose, 5, allocator);
-        defer allocator.free(result);
-        try compare(allocator, result, "result = talib.TRIX(testClose,5)");
+        const result1 = try Trix(&testClose, 5, allocator);
+        defer allocator.free(result1);
+        try compare(allocator, result1, "result = talib.TRIX(testClose,5)");
 
-        result = try Trix(&testClose, 30, allocator);
-        defer allocator.free(result);
-        try compare(allocator, result, "result = talib.TRIX(testClose,30)");
+        const result2 = try Trix(&testClose, 30, allocator);
+        defer allocator.free(result2);
+        try compare(allocator, result2, "result = talib.TRIX(testClose,30)");
     }
 
     // test Macd

@@ -56,14 +56,14 @@ pub fn StochF(
     @memset(outFastK, 0);
     @memset(outFastD, 0);
 
-    const lookbackK = inFastKPeriod - 1;
-    const lookbackFastD = inFastDPeriod - 1;
+    const lookbackK = if (inFastKPeriod > 1) inFastKPeriod - 1 else 0;
+    const lookbackFastD = if (inFastDPeriod > 1) inFastDPeriod - 1 else 0;
     const lookbackTotal = lookbackK + lookbackFastD;
     const startIdx = lookbackTotal;
 
     if (len <= startIdx) return .{ outFastK, outFastD };
 
-    const tempLen = len - lookbackK + 1;
+    const tempLen = len - lookbackK;
     var tempBuffer = try allocator.alloc(f64, tempLen);
     defer allocator.free(tempBuffer);
     @memset(tempBuffer, 0);
@@ -71,26 +71,31 @@ pub fn StochF(
     for (lookbackK..len) |today| {
         const outIdx = today - lookbackK;
         const windowStart = today - lookbackK;
-        var lowest = low[windowStart];
-        var highest = high[windowStart];
+
+        var windowLow = low[windowStart];
+        var windowHigh = high[windowStart];
+
         for (windowStart..today + 1) |i| {
-            if (low[i] < lowest) lowest = low[i];
-            if (high[i] > highest) highest = high[i];
+            if (low[i] < windowLow) windowLow = low[i];
+            if (high[i] > windowHigh) windowHigh = high[i];
         }
-        const diff = (highest - lowest) / 100.0;
+
+        const diff = windowHigh - windowLow;
         tempBuffer[outIdx] = if (!IsZero(diff))
-            (close[today] - lowest) / diff
+            (close[today] - windowLow) / diff * 100.0
         else
             0.0;
     }
 
     const tempBuffer1 = try Ma(tempBuffer, inFastDPeriod, inFastDMAType, allocator);
     defer allocator.free(tempBuffer1);
+
     for (lookbackTotal..len) |j| {
-        const i = j - lookbackTotal + 1;
-        outFastK[j] = tempBuffer[i];
-        outFastD[j] = tempBuffer1[i];
+        const i = j - lookbackTotal;
+        outFastK[j] = tempBuffer[i + lookbackFastD];
+        outFastD[j] = tempBuffer1[i + lookbackFastD];
     }
+
     return .{ outFastK, outFastD };
 }
 
@@ -113,16 +118,8 @@ test "StochF calculation works with bigger dataset" {
     defer gpa.free(result[0]);
     defer gpa.free(result[1]);
 
-    const expect_fastk = [_]f64{
-        0,                 0,                 0,                 92.156862745098,   83.99999999999999, 86.88524590163934, 92.30769230769234,
-        84.48275862068962, 81.35593220338981, 88.33333333333334, 80.64516129032259, 82.25806451612907, 81.81818181818183, 82.08955223880598,
-        82.35294117647064, 84.05797101449282, 84.28571428571426, 83.09859154929575, 83.33333333333339, 83.33333333333331,
-    };
-    const expect_fastd = [_]f64{
-        0,                 0,                 0,                 84.04139433551195, 88.07843137254899, 85.44262295081967, 89.59646910466584,
-        88.39522546419099, 82.91934541203972, 84.84463276836158, 84.48924731182797, 81.45161290322582, 82.03812316715545, 81.9538670284939,
-        82.2212467076383,  83.20545609548172, 84.17184265010354, 83.69215291750501, 83.21596244131457, 83.33333333333336,
-    };
+    const expect_fastk = [_]f64{ 0, 0, 0, 92.156862745098, 83.99999999999999, 86.88524590163934, 92.30769230769234, 84.48275862068962, 81.35593220338981, 88.33333333333334, 80.64516129032259, 82.25806451612907, 81.81818181818183, 82.08955223880598, 82.35294117647064, 84.05797101449282, 84.28571428571426, 83.09859154929575, 83.33333333333339, 83.33333333333331 };
+    const expect_fastd = [_]f64{ 0, 0, 0, 84.04139433551195, 88.07843137254899, 85.44262295081967, 89.59646910466584, 88.39522546419099, 82.91934541203972, 84.84463276836158, 84.48924731182797, 81.45161290322582, 82.03812316715545, 81.9538670284939, 82.2212467076383, 83.20545609548172, 84.17184265010354, 83.69215291750501, 83.21596244131457, 83.33333333333336 };
 
     for (result[0], expect_fastk) |actual, expect| {
         try std.testing.expectApproxEqAbs(expect, actual, 1e-8);
